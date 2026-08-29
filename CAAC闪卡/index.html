@@ -51,7 +51,7 @@
     }
     .mode-bar-main { grid-area:title; min-width:0; display:flex; align-items:center; justify-content:center; min-height:42px; }
     .mode-bar-main { position:absolute; top:12px; left:50%; width:calc(100% - 180px); height:42px; transform:translateX(-50%); pointer-events:none; }
-    .mode-bar.daily-mode .mode-bar-main { width:calc(100% - 28px); }
+    .mode-bar.daily-mode .mode-bar-main { grid-area:auto; left:0; right:0; width:auto; transform:none; }
     .mode-bar.daily-mode { margin-bottom:0; border-radius:20px 20px 0 0; box-shadow:0 12px 28px rgba(23,50,77,.08); }
     .mode-bar-title { max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:18px; font-weight:850; margin:0; letter-spacing:-.02em; text-align:center; }
     .mode-bar-progress { grid-area:progress; display:flex; align-items:center; gap:9px; }
