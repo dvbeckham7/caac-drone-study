@@ -3,7 +3,7 @@ const savedScope = localStorage.getItem('caac-selected-scope');
 let selectedChapter = savedScope === 'all' ? 'all' : Number(savedScope) || 1;
 const getChapterQuestions = (chapter) => allQuestions
   .filter((question) => chapter === 'all' || question.chapter === chapter)
-  .map((question) => [question.question, question.options, question.answer, question.id, question.tip, question.memoryType, question.reviewStatus, question.reviewNote]);
+  .map((question) => [question.question, question.options, question.answer, question.id, question.tip, question.memoryType, question.reviewStatus, question.reviewNote, question.specItems]);
 let questions = getChapterQuestions(selectedChapter);
 const STORAGE_KEY='caac-ch1-v2';
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -255,7 +255,7 @@ function recordAnswerStats(questionId, correct){
   save();
 }
 
-function renderMemoryGuide(memoryType, tip){
+function renderMemoryGuide(memoryType, tip, specItems){
   const note = tip ? `<div class="guide-note">${esc(tip)}</div>` : '';
   const boundaryMatch = tip && tip.match(/(?:[≤≥<>]=?\s*\d+(?:\.\d+)?\s*(?:米|公里|kg|m\/s|A|V)?|\d+(?:\.\d+)?\s*(?:米|公里|kg|m\/s|A|V)?(?:（不含）)?(?:以上|以下|以内|之外)?)/);
   const boundaryLabel = boundaryMatch ? boundaryMatch[0].trim() : '本题边界';
@@ -277,11 +277,9 @@ function renderMemoryGuide(memoryType, tip){
   if (memoryType === 'threshold') {
     return `<div class="memory-guide"><b>只记这个边界</b><div class="threshold-number">${esc(boundaryLabel)}</div><div class="threshold-value">${note}</div></div>`;
   }
-  if (memoryType === 'dual-range') {
-    return `<div class="memory-guide"><b>双栏范围</b><div class="dual-range"><span>空机质量</span><span>起飞全重</span></div><div class="dual-range muted"><span>看左栏</span><span>再看右栏</span></div>${note}</div>`;
-  }
-  if (memoryType === 'dual-threshold') {
-    return `<div class="memory-guide"><b>双边界</b><div class="dual-range"><span>半径 500m</span><span>高度 &lt;120m</span></div><div class="dual-range muted"><span>两个条件</span><span>同时满足</span></div>${note}</div>`;
+  if (memoryType === 'spec-list' && Array.isArray(specItems) && specItems.length) {
+    const items = specItems.map(([label, value]) => `<div><strong>${esc(label)}</strong>${value ? `<span>${esc(value)}</span>` : ''}</div>`).join('');
+    return `<div class="memory-guide"><b>记住这几项</b><div class="classification-ruler" style="grid-template-columns:repeat(${specItems.length}, 1fr)">${items}</div>${note}</div>`;
   }
   if (memoryType === 'formula') return `<div class="memory-guide"><b>记公式</b><div class="formula-guide"><span>已知量</span><strong>→</strong><span>换算关系</span><strong>→</strong><span>答案量</span></div>${note}</div>`;
   if (memoryType === 'relationship') return `<div class="memory-guide"><b>因果关系</b><div class="formula-guide"><span>条件变化</span><strong>→</strong><span>结果变化</span></div>${note}</div>`;
@@ -324,7 +322,7 @@ function render(){
     const isCorrect = Number.isInteger(selectedAnswer)
       ? selectedAnswer === q[2]
       : card.result === 'easy' || card.result === 'mid';
-    const memoryGuide = renderMemoryGuide(q[5], q[4]);
+    const memoryGuide = renderMemoryGuide(q[5], q[4], q[8]);
     const tipText = memoryGuide ? '' : `<span>${esc(q[4] || '')}</span>`;
     $('#feedback').className = 'feedback ' + (isCorrect ? 'good' : 'retry');
     $('#feedback').innerHTML = isCorrect

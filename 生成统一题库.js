@@ -58,11 +58,16 @@ const chapterOneMemoryTypes = {
   9: 'classification',
   10: 'threshold',
   11: 'classification',
-  12: 'dual-range',
-  13: 'dual-range',
-  14: 'dual-range',
+  12: 'spec-list',
+  13: 'spec-list',
+  14: 'spec-list',
   15: 'heavy-classification',
   16: 'heavy-classification'
+};
+const chapterOneSpecItems = {
+  12: [['空机质量', '>7–116kg'], ['最大平飞速度', '<100km/h'], ['升限', '<3000m']],
+  13: [['空机质量', '15–116kg'], ['起飞全重', '25–150kg']],
+  14: [['空机质量', '1.5–4kg'], ['起飞全重', '1.5–7kg']]
 };
 const chapterTwoTips = {
   2: '3000米以下对应运动或私用；3000米以上再看商照。',
@@ -81,8 +86,11 @@ const chapterTwoMemoryTypes = {
   6: 'threshold',
   9: 'threshold',
   12: 'threshold',
-  16: 'dual-threshold',
+  16: 'spec-list',
   23: 'threshold'
+};
+const chapterTwoSpecItems = {
+  16: [['半径', '500m'], ['高度', '<120m']]
 };
 const questionReviewData = {
   'ch08-q168': {
@@ -97,7 +105,8 @@ const chapterMemoryData = {
   },
   4: {
     tips: { 9: '飞行组织四阶段：预先准备→直接准备→飞行实施→飞行讲评。', 22: '电子围栏记两件事：阻挡侵入 + 报警。', 24: '失控预案按对象分：回收、云端上报、未接入云则联系空管上报。', 38: '监视系统获取运行信息：两种方式都包括。' },
-    types: { 9: 'sequence', 22: 'dual-range', 24: 'sequence', 38: 'dual-range' }
+    types: { 9: 'sequence', 22: 'spec-list', 24: 'sequence', 38: 'spec-list' },
+    specs: { 22: [['阻挡侵入', ''], ['报警功能', '']], 38: [['被动反馈', '雷达/ADS-B'], ['主动反馈', '运营人发送']] }
   },
   5: {
     tips: { 3: '供电系统负责给各用电系统和设备提供电能。', 4: '地面站四功能：指挥调度、任务规划、操作控制、显示记录。', 10: '控制站由飞行操纵、任务载荷、数据链路、通信指挥组成。', 19: '导航输出三项：高度、速度、位置。', 22: '电动动力系统：电机 + 动力电源 + 调速系统。', 27: '飞控核心三项：姿态稳定控制、飞行管理、应急控制。', 49: '电气系统三部分：电源、配电系统、用电设备。', 50: '无人机系统三要素：飞行器平台、控制站、通信链路。' },
@@ -113,11 +122,13 @@ const chapterMemoryData = {
   },
   8: {
     tips: { 4: '地面风速大于4级，会影响安全和拍摄稳定。', 16: '雷暴成熟后冷空气下沉，阵风常达20m/s。', 18: '风向袋吹平：风速约6–10m/s。', 33: '空气达到饱和时：气温=露点温度。', 34: '华氏转摄氏：59°F=15°C。', 54: '雷暴三阶段：积云→成熟→消散。', 58: '大气组成约78%氮、21%氧、1%其他。', 85: '4级风：5.5–7.9m/s。' },
-    types: { 4: 'threshold', 16: 'threshold', 18: 'range-distance', 33: 'relationship', 34: 'formula', 54: 'sequence', 58: 'dual-range', 85: 'range-distance' }
+    types: { 4: 'threshold', 16: 'threshold', 18: 'range-distance', 33: 'relationship', 34: 'formula', 54: 'sequence', 58: 'spec-list', 85: 'range-distance' },
+    specs: { 58: [['氮气', '78%'], ['氧气', '21%'], ['其他', '1%']] }
   },
   9: {
     tips: { 1: '风速增大：偏流增大；顺侧风地速增大。', 2: '风速减小：偏流减小；逆侧风地速增大。', 3: '真空速增大：地速增大、偏流减小。', 35: '垂直向上突风使升力增大。', 66: '气体粘性随温度升高而增大。', 72: '升力系数越大，产生的升力越大。', 158: '理想气体关系：P=RρT。', 225: '平飞平衡：升力=重力、推力=阻力、力矩平衡。' },
-    types: { 1: 'relationship', 2: 'relationship', 3: 'relationship', 35: 'relationship', 66: 'relationship', 72: 'relationship', 158: 'formula', 225: 'dual-range' }
+    types: { 1: 'relationship', 2: 'relationship', 3: 'relationship', 35: 'relationship', 66: 'relationship', 72: 'relationship', 158: 'formula', 225: 'spec-list' },
+    specs: { 225: [['升力', '=重力'], ['推力', '=阻力'], ['力矩', '平衡']] }
   },
   10: {
     tips: { 3: '事故60%以上发生在起降阶段。', 4: '五边航线不含任务飞行。', 24: '起降驾驶员不参与巡航阶段控制。', 45: '平飘前段速度较大、下沉较慢，拉杆量小。', 53: '风速大或气温低，目测低时要相应多加油门。', 82: '长时间爬升发动机温度高：先定高，指标正常再继续。', 84: '坡度转弯配合方向舵，可减小转弯半径和侧滑。' },
@@ -155,6 +166,7 @@ for (const fileName of chapterFiles) {
       answer: answerIndex,
       tip: chapter === 1 ? chapterOneTips[number - 1] || '' : chapter === 2 ? chapterTwoTips[number] || '' : chapterMemoryData[chapter]?.tips[number] || '',
       memoryType: chapter === 1 ? chapterOneMemoryTypes[number] || null : chapter === 2 ? chapterTwoMemoryTypes[number] || null : chapterMemoryData[chapter]?.types[number] || null,
+      specItems: chapter === 1 ? chapterOneSpecItems[number] || null : chapter === 2 ? chapterTwoSpecItems[number] || null : chapterMemoryData[chapter]?.specs?.[number] || null,
       reviewStatus: questionReviewData[id]?.status || 'unreviewed',
       reviewNote: questionReviewData[id]?.note || '',
       source: fileName,
