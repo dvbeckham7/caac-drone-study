@@ -1,10 +1,12 @@
 const allQuestions = window.CAAC_QUESTIONS || [];
 const savedScope = localStorage.getItem('caac-selected-scope');
 let selectedChapter = savedScope === 'all' ? 'all' : Number(savedScope) || 1;
+const toTuple = (question) => [question.question, question.options, question.answer, question.id, question.tip, question.memoryType, question.reviewStatus, question.reviewNote, question.specItems];
 const getChapterQuestions = (chapter) => allQuestions
   .filter((question) => chapter === 'all' || question.chapter === chapter)
-  .map((question) => [question.question, question.options, question.answer, question.id, question.tip, question.memoryType, question.reviewStatus, question.reviewNote, question.specItems]);
+  .map(toTuple);
 let questions = getChapterQuestions(selectedChapter);
+let activeScopeKey = selectedChapter;
 const STORAGE_KEY='caac-ch1-v2';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const DAILY_TARGET = 20;
@@ -43,61 +45,82 @@ function normalizeState(raw){
   return next;
 }
 
-let index=0,flipped=false,mode='study',wrongReview=false,currentAnswered=false,retryQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
+let index=0,flipped=false,currentScreen='menu',subView='study',wrongReview=false,currentAnswered=false,retryQueue=[],reinforcementQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
 let examQuestions = [], examAnswers = [], examIndex = 0, examEndsAt = 0, examTimerId = null, examSubmitted = false;
+let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 function getFreshStartIndex(questionCount){
   return questionCount > 1 ? 1 + Math.floor(Math.random() * (questionCount - 1)) : 0;
 }
-const savedChapterIndex = state.currentByChapter[selectedChapter];
-if (Number.isInteger(savedChapterIndex) && savedChapterIndex >= 0 && savedChapterIndex < questions.length) {
-  index = savedChapterIndex;
-} else {
+function restoreIndex(){
+  const savedChapterIndex = state.currentByChapter[activeScopeKey];
+  if (Number.isInteger(savedChapterIndex) && savedChapterIndex >= 0 && savedChapterIndex < questions.length) {
+    index = savedChapterIndex;
+    return;
+  }
   const savedIndex = state.currentId ? questions.findIndex((question) => question[3] === state.currentId) : -1;
   if (savedIndex >= 0) {
     index = savedIndex;
-  } else if (questions.length > 1) {
-    index = getFreshStartIndex(questions.length);
+    return;
   }
+  index = questions.length > 1 ? getFreshStartIndex(questions.length) : 0;
 }
-const $=s=>document.querySelector(s); const save=()=>{ state.currentIndex=index; state.currentId=questions[index]?.[3] || null; state.currentByChapter[selectedChapter]=index; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); };
+restoreIndex();
+const $=s=>document.querySelector(s); const save=()=>{ state.currentIndex=index; state.currentId=questions[index]?.[3] || null; state.currentByChapter[activeScopeKey]=index; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); };
 const esc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
 
-function todayKey(){ return new Date().toISOString().slice(0, 10); }
+function dateKey(date = new Date()){
+  const utc8Date = new Date(date.getTime() + 8 * 60 * 60 * 1000);
+  return `${utc8Date.getUTCFullYear()}-${String(utc8Date.getUTCMonth() + 1).padStart(2, '0')}-${String(utc8Date.getUTCDate()).padStart(2, '0')}`;
+}
+
+function todayKey(){ return dateKey(); }
+
+function compareDateKeys(left, right){ return left < right ? -1 : left > right ? 1 : 0; }
+
+function migrateDailyState(){
+  if (!state.daily || typeof state.daily !== 'object') {
+    state.daily = { target: DAILY_TARGET, records: {} };
+    return;
+  }
+  if (!state.daily.records || typeof state.daily.records !== 'object') state.daily.records = {};
+  if (state.daily.date && !state.daily.records[state.daily.date]) {
+    state.daily.records[state.daily.date] = {
+      date: state.daily.date,
+      target: DAILY_TARGET,
+      completed: Math.min(Number(state.daily.completed) || 0, DAILY_TARGET),
+      questionIds: Array.isArray(state.daily.questionIds) ? state.daily.questionIds : [],
+      checkedInAt: state.daily.completed >= DAILY_TARGET ? (state.daily.completedAt || new Date().toISOString()) : null
+    };
+  }
+  state.daily.target = DAILY_TARGET;
+}
+
+function createDailyRecord(date){
+  return { date, target: DAILY_TARGET, completed: 0, questionIds: [], checkedInAt: null };
+}
 
 function getDailyTask(){
-  if (!state.daily || state.daily.date !== todayKey()) {
-    state.daily = { date: todayKey(), target: DAILY_TARGET, completed: 0, rewardClaimed: false };
-    save();
-  }
-  return state.daily;
+  migrateDailyState();
+  const today = todayKey();
+  if (!state.daily.records[today]) state.daily.records[today] = createDailyRecord(today);
+  const daily = state.daily.records[today];
+  daily.target = DAILY_TARGET;
+  daily.completed = Math.min(Number(daily.completed) || 0, DAILY_TARGET);
+  if (daily.completed >= DAILY_TARGET && !daily.checkedInAt) daily.checkedInAt = new Date().toISOString();
+  state.daily.date = today;
+  state.daily.completed = daily.completed;
+  state.daily.questionIds = daily.questionIds;
+  save();
+  return daily;
 }
 
 function recordDailyAnswer(){
   const daily = getDailyTask();
-  daily.completed += 1;
-  if (daily.completed >= daily.target) daily.rewardClaimed = true;
+  if (daily.checkedInAt) return;
+  daily.completed = Math.min(daily.completed + 1, DAILY_TARGET);
+  if (daily.completed >= daily.target) daily.checkedInAt = new Date().toISOString();
+  state.daily.completed = daily.completed;
   save();
-}
-
-function getGlobalStats(){
-  const cards = allQuestions.map((question) => ({ ...defaultCardState(), ...(state.cards[question.id] || {}) }));
-  return { done: cards.filter((card) => card.result).length, wrong: cards.filter((card) => card.result === 'hard').length };
-}
-
-function renderPlan(){
-  const stats = getGlobalStats();
-  const daily = getDailyTask();
-  const stage = mode === 'exam'
-    ? { label: '当前阶段：考试迁移', hint: '进入正式模拟，检验十章混合答题能力。' }
-    : stats.done < allQuestions.length
-      ? { label: '当前阶段：逐章通关', hint: '先完成各章节题目，答错题会自动回放。' }
-      : stats.wrong > 0
-        ? { label: '当前阶段：错题回放', hint: '优先重做错题，直到能稳定答对。' }
-        : { label: '当前阶段：每日巩固', hint: '基础题库已完成，按每日任务保持记忆。' };
-  $('#stageLabel').textContent = stage.label;
-  $('#stageHint').textContent = stage.hint;
-  $('#dailyTask').textContent = `今日任务：${Math.min(daily.completed, daily.target)} / ${daily.target} 题`;
-  $('#dailyReward').textContent = daily.rewardClaimed ? '奖励已获得' : '奖励：完成标记';
 }
 
 const availableChapters = [...new Set(allQuestions.map((question) => question.chapter))].sort((a, b) => a - b);
@@ -118,11 +141,60 @@ function getUnlockedChapter(){
   return availableChapters.find((chapter) => isChapterUnlocked(chapter)) || 1;
 }
 
-if (selectedChapter !== 'all' && (!availableChapters.includes(selectedChapter) || !isChapterUnlocked(selectedChapter))) selectedChapter = getUnlockedChapter();
+if (selectedChapter !== 'all' && (!availableChapters.includes(selectedChapter) || !isChapterUnlocked(selectedChapter))) {
+  selectedChapter = getUnlockedChapter();
+  activeScopeKey = selectedChapter;
+  questions = getChapterQuestions(selectedChapter);
+  restoreIndex();
+}
+
+function getDailyPool(){
+  const daily = getDailyTask();
+  const unlocked = new Set(availableChapters.filter(isChapterUnlocked));
+  const available = allQuestions.filter((question) => unlocked.has(question.chapter));
+  const availableIds = new Set(available.map((question) => question.id));
+  const savedIds = Array.isArray(daily.questionIds)
+    ? daily.questionIds.filter((id) => availableIds.has(id))
+    : [];
+  const questionIds = savedIds.length === DAILY_TARGET
+    ? savedIds
+    : shuffle(available).slice(0, DAILY_TARGET).map((question) => question.id);
+  daily.questionIds = questionIds;
+  state.daily.questionIds = questionIds;
+  save();
+  const questionsById = new Map(available.map((question) => [question.id, question]));
+  return questionIds.map((id) => questionsById.get(id)).filter(Boolean).map(toTuple);
+}
+
+function renderDailyCalendar(){
+  const today = todayKey();
+  const todayDate = `${Number(today.slice(5, 7))}月${Number(today.slice(8, 10))}日`;
+  $('#calendarToday').textContent = `今天 · ${today.slice(0, 4)}年${todayDate}`;
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cells = [];
+  for (let i = 0; i < firstDay; i += 1) cells.push('<span class="calendar-day empty" aria-hidden="true"></span>');
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const key = dateKey(new Date(year, month, day));
+    const record = state.daily?.records?.[key];
+    const comparison = compareDateKeys(key, today);
+    const status = comparison > 0 ? 'future' : record?.checkedInAt ? 'checked' : comparison < 0 ? 'expired' : 'today';
+    const label = status === 'checked' ? '已签到' : status === 'expired' ? '' : status === 'future' ? '未开放' : `${Math.min(record?.completed || 0, DAILY_TARGET)}/${DAILY_TARGET}`;
+    cells.push(`<span class="calendar-day ${status}" title="${key} · ${label}"><b>${day}</b><small>${label}</small></span>`);
+  }
+  $('#calendarTitle').textContent = `${year} 年 ${month + 1} 月`;
+  $('#dailyCalendarGrid').innerHTML = cells.join('');
+  const now = new Date();
+  $('#calendarPrev').disabled = year < now.getFullYear() - 1;
+  $('#calendarNext').disabled = year > now.getFullYear() || (year === now.getFullYear() && month >= now.getMonth());
+  $('#dailyCalendarStatus').textContent = state.daily?.records?.[today]?.checkedInAt ? '今日已签到，明天继续' : '完成今日目标后自动记录签到';
+  $('#dailyCalendarStatus').style.display = 'none';
+}
 
 function renderChapterLevels(){
   const allComplete = isAllChaptersComplete();
-  $('#examTab').disabled = !allComplete;
   $('#chapterLevels').innerHTML = availableChapters.map((chapter) => {
     const complete = isChapterComplete(chapter);
     const unlocked = isChapterUnlocked(chapter);
@@ -130,21 +202,128 @@ function renderChapterLevels(){
   }).join('') + `<button class="level-btn${selectedChapter === 'all' ? ' active' : ''}" data-chapter="all" ${allComplete ? '' : 'disabled'} type="button">十章混合</button>`;
 }
 
-renderChapterLevels();
+function renderMenu(){
+  const chapterForCard = selectedChapter === 'all' ? getUnlockedChapter() : selectedChapter;
+  const chapterQs = getChapterQuestions(chapterForCard);
+  const chapterDone = chapterQs.filter((q) => state.cards[q[3]]?.result).length;
+  $('#modeChaptersDesc').textContent = `第 ${chapterForCard} 章 · ${chapterDone}/${chapterQs.length} 题已练习`;
+
+  const daily = getDailyTask();
+  $('#modeDailyDesc').textContent = daily.completed >= DAILY_TARGET
+    ? '今日目标已完成，可继续复习'
+    : `今日 ${Math.min(daily.completed, daily.target)}/${daily.target} 题`;
+
+  const allDone = isAllChaptersComplete();
+  $('#modeExam').disabled = !allDone;
+  $('#modeExamDesc').textContent = allDone ? '十章已解锁，随时开考' : '完成全部章节后解锁';
+}
+
+function renderScreens(){
+  $('#menuView').hidden = currentScreen !== 'menu';
+  $('#modeBar').hidden = currentScreen === 'menu';
+  $('#modeBar').classList.toggle('daily-mode', currentScreen === 'daily');
+  $('#chapterLevels').hidden = currentScreen !== 'chapters';
+  $('#studyView').hidden = !((currentScreen === 'chapters' || currentScreen === 'daily') && subView === 'study');
+  $('#wrongView').hidden = !((currentScreen === 'chapters' || currentScreen === 'daily') && subView === 'wrong');
+  $('#completionView').hidden = !((currentScreen === 'chapters' || currentScreen === 'daily') && subView === 'completion');
+  $('#examView').hidden = currentScreen !== 'exam';
+  $('#resetBtn').hidden = currentScreen !== 'chapters';
+  $('#dailyCalendar').hidden = currentScreen !== 'daily';
+  if (currentScreen === 'daily') renderDailyCalendar();
+  if ((currentScreen === 'chapters' || currentScreen === 'daily') && subView === 'wrong') renderWrongList();
+  if ((currentScreen === 'chapters' || currentScreen === 'daily') && subView === 'completion') renderCompletion();
+}
+
+function isCurrentScopeComplete(){
+  if (currentScreen === 'daily') return getDailyTask().completed >= DAILY_TARGET;
+  if (currentScreen === 'chapters' && selectedChapter !== 'all') return isChapterComplete(selectedChapter);
+  return currentScreen === 'chapters' && selectedChapter === 'all' && isAllChaptersComplete();
+}
+
+function renderCompletion(){
+  const daily = currentScreen === 'daily';
+  const stats = getStats();
+  const accuracy = getAccuracyStats();
+  $('#completionTitle').textContent = daily ? '今日签到完成！' : '本章完成！';
+  $('#completionMessage').textContent = daily
+    ? '20 道题已完成，今日签到已记录。'
+    : `第 ${selectedChapter} 章已完成，可以整理错题或进入下一章。`;
+  $('#completionDone').textContent = daily ? `${DAILY_TARGET}/${DAILY_TARGET}` : `${stats.done}/${questions.length}`;
+  $('#completionAccuracy').textContent = accuracy.accuracy === null ? '--' : `${accuracy.accuracy}%`;
+  const nextChapter = !daily && selectedChapter !== 'all'
+    ? availableChapters.find((chapter) => chapter > selectedChapter)
+    : null;
+  $('#completionNext').hidden = !nextChapter;
+  if (nextChapter) $('#completionNext').textContent = `解锁第 ${nextChapter} 章 →`;
+  $('#completionWrong').hidden = stats.wrong === 0;
+  $('#completionContinue').textContent = daily ? '继续复习本日题目' : '继续复习本章题目';
+}
+
+function enterChapters(){
+  currentScreen = 'chapters';
+  activeScopeKey = selectedChapter;
+  questions = getChapterQuestions(selectedChapter);
+  restoreIndex();
+  wrongReview = false;
+  currentAnswered = false;
+  retryQueue = [];
+  reinforcementQueue = [];
+  subView = isCurrentScopeComplete() ? 'completion' : 'study';
+  renderChapterLevels();
+  renderScreens();
+  render();
+}
+
+function enterDaily(){
+  currentScreen = 'daily';
+  activeScopeKey = 'daily';
+  questions = getDailyPool();
+  restoreIndex();
+  wrongReview = false;
+  currentAnswered = false;
+  retryQueue = [];
+  reinforcementQueue = [];
+  subView = isCurrentScopeComplete() ? 'completion' : 'study';
+  renderScreens();
+  render();
+}
+
+function enterExam(){
+  if (!isAllChaptersComplete()) return;
+  currentScreen = 'exam';
+  renderScreens();
+  if (!examQuestions.length || examSubmitted) {
+    startExam();
+  } else if (!examTimerId) {
+    examTimerId = setInterval(updateExamTimer, 1000);
+    updateExamTimer();
+  }
+  renderExam();
+}
+
+function enterMenu(){
+  if (currentScreen === 'exam') stopExamTimer();
+  currentScreen = 'menu';
+  renderScreens();
+  renderMenu();
+}
+
 $('#chapterLevels').onclick = (event) => {
   const button = event.target.closest('[data-chapter]');
   if (!button || button.disabled) return;
   selectedChapter = button.dataset.chapter === 'all' ? 'all' : Number(button.dataset.chapter);
+  activeScopeKey = selectedChapter;
   questions = getChapterQuestions(selectedChapter);
-  index = Number.isInteger(state.currentByChapter[selectedChapter])
-    ? state.currentByChapter[selectedChapter]
-    : getFreshStartIndex(questions.length);
+  restoreIndex();
   wrongReview = false;
   currentAnswered = false;
   retryQueue = [];
+  reinforcementQueue = [];
   localStorage.setItem('caac-selected-scope', String(selectedChapter));
   save();
+  subView = isCurrentScopeComplete() ? 'completion' : 'study';
   renderChapterLevels();
+  renderScreens();
   render();
 };
 
@@ -184,6 +363,10 @@ function getNextIndex(current = 0, skipCurrent = false){
 
   if (!candidates.length) return current;
   return pickRandom(candidates);
+}
+
+function hasPendingReview(){
+  return wrongReview || retryQueue.length > 0 || reinforcementQueue.length > 0;
 }
 
 function recordAnswer(cardIndex, level){
@@ -234,7 +417,7 @@ function getStats(){
 }
 
 function getAccuracyStats(){
-  const ids = new Set(allQuestions.filter((question) => selectedChapter === 'all' || question.chapter === selectedChapter).map((question) => question.id));
+  const ids = new Set(questions.map((question) => question[3]));
   const stats = [...ids].reduce((result, id) => {
     const item = state.answerStats[id];
     if (item) {
@@ -255,36 +438,43 @@ function recordAnswerStats(questionId, correct){
   save();
 }
 
-function renderMemoryGuide(memoryType, tip, specItems){
+function renderMemoryGuide(memoryType, tip, specItems, isCorrect){
   const note = tip ? `<div class="guide-note">${esc(tip)}</div>` : '';
+  const wrap = (content) => `<div class="memory-guide"><div class="mat-header"><span>MA</span><em>记忆辅助</em></div>${content}</div>`;
   const boundaryMatch = tip && tip.match(/(?:[≤≥<>]=?\s*\d+(?:\.\d+)?\s*(?:米|公里|kg|m\/s|A|V)?|\d+(?:\.\d+)?\s*(?:米|公里|kg|m\/s|A|V)?(?:（不含）)?(?:以上|以下|以内|之外)?)/);
-  const boundaryLabel = boundaryMatch ? boundaryMatch[0].trim() : '本题边界';
+  const boundaryLabel = boundaryMatch ? boundaryMatch[0].trim() : '';
   if (memoryType === 'range-distance') {
-    return `<div class="memory-guide"><b>距离标尺（km）</b><div class="scale"><span>≤15</span><span>15–50</span><span>50–200</span><span>200–800</span><span>&gt;800</span></div><div class="scale-labels"><span>超近</span><span>近程</span><span>中近</span><span>中程</span><span>远程</span></div>${note}</div>`;
+    return wrap(`<b>距离标尺（km）</b><div class="scale"><span>≤15</span><span>15–50</span><span>50–200</span><span>200–800</span><span>&gt;800</span></div><div class="scale-labels"><span>超近</span><span>近程</span><span>中近</span><span>中程</span><span>远程</span></div>${note}`);
   }
   if (memoryType === 'range-radius') {
-    return `<div class="memory-guide"><b>活动半径标尺（km）</b><div class="scale"><span>0</span><span>≤15</span><span>15–50</span><span>50–200</span><span>&gt;200</span></div><div class="scale-labels"><span></span><span>超近程</span><span>近程</span><span>中程</span><span>远程</span></div>${note}</div>`;
+    return wrap(`<b>活动半径标尺（km）</b><div class="scale"><span>0</span><span>≤15</span><span>15–50</span><span>50–200</span><span>&gt;200</span></div><div class="scale-labels"><span></span><span>超近程</span><span>近程</span><span>中程</span><span>远程</span></div>${note}`);
   }
   if (memoryType === 'range-height') {
-    return `<div class="memory-guide"><b>任务高度标尺（m）</b><div class="scale"><span>0</span><span>50</span><span>100</span><span>1000</span></div><div class="scale-labels height-labels"><span>地面</span><span></span><span>超低空上限</span><span>更高</span></div>${note}</div>`;
+    return wrap(`<b>任务高度标尺（m）</b><div class="scale"><span>0</span><span>50</span><span>100</span><span>1000</span></div><div class="scale-labels height-labels"><span>地面</span><span></span><span>超低空上限</span><span>更高</span></div>${note}`);
   }
   if (memoryType === 'classification') {
-    return `<div class="memory-guide"><b>按空机质量看四档</b><div class="classification-ruler"><div><strong>微型</strong><span>≤7kg</span></div><div><strong>轻型</strong><span>&gt;7–116kg</span></div><div><strong>中型</strong><span>&gt;116–5700kg</span></div><div><strong>大型</strong><span>&gt;5700kg</span></div></div>${note}</div>`;
+    return wrap(`<b>按空机质量看四档</b><div class="classification-ruler"><div><strong>微型</strong><span>≤7kg</span></div><div><strong>轻型</strong><span>&gt;7–116kg</span></div><div><strong>中型</strong><span>&gt;116–5700kg</span></div><div><strong>大型</strong><span>&gt;5700kg</span></div></div>${note}`);
+  }
+  if (memoryType === 'full-classification' && Array.isArray(specItems) && specItems.length) {
+    const items = specItems.map(([label, value, active]) => {
+      const details = String(value).split('；').map((item) => `<span>${esc(item)}</span>`).join('');
+      return `<div class="${active ? 'active' : ''}"><strong>${esc(label)}</strong><span class="ruler-details">${details}</span></div>`;
+    }).join('');
+    return wrap(`<b>完整类别标尺（由小到大）</b><div class="classification-ruler full">${items}</div>${note}`);
   }
   if (memoryType === 'heavy-classification') {
-    return `<div class="memory-guide"><b>高质量段标尺</b><div class="classification-ruler heavy"><div><strong>XI类</strong><span>&gt;116–5700kg</span></div><div><strong>XII类</strong><span>&gt;5700kg</span></div></div>${note}</div>`;
+    return wrap(`<b>高质量段标尺</b><div class="classification-ruler heavy"><div><strong>XI类</strong><span>&gt;116–5700kg</span></div><div><strong>XII类</strong><span>&gt;5700kg</span></div></div>${note}`);
   }
   if (memoryType === 'threshold') {
-    return `<div class="memory-guide"><b>只记这个边界</b><div class="threshold-number">${esc(boundaryLabel)}</div><div class="threshold-value">${note}</div></div>`;
+    return wrap(`${boundaryLabel ? `<div class="threshold-number">${esc(boundaryLabel)}</div>` : ''}<div class="threshold-value">${note}</div>`);
   }
-  if (memoryType === 'spec-list' && Array.isArray(specItems) && specItems.length) {
-    const items = specItems.map(([label, value]) => `<div><strong>${esc(label)}</strong>${value ? `<span>${esc(value)}</span>` : ''}</div>`).join('');
-    return `<div class="memory-guide"><b>记住这几项</b><div class="classification-ruler" style="grid-template-columns:repeat(${specItems.length}, 1fr)">${items}</div>${note}</div>`;
+  if (memoryType === 'spec-list') {
+    const items = Array.isArray(specItems) && specItems.length
+      ? `<div class="spec-list">${specItems.map(([label, value]) => `<div><strong>${esc(label)}</strong>${value ? `<span>${esc(value)}</span>` : ''}</div>`).join('')}</div>`
+      : '';
+    return wrap(`${items}${note}`);
   }
-  if (memoryType === 'formula') return `<div class="memory-guide"><b>记公式</b><div class="formula-guide"><span>已知量</span><strong>→</strong><span>换算关系</span><strong>→</strong><span>答案量</span></div>${note}</div>`;
-  if (memoryType === 'relationship') return `<div class="memory-guide"><b>因果关系</b><div class="formula-guide"><span>条件变化</span><strong>→</strong><span>结果变化</span></div>${note}</div>`;
-  if (memoryType === 'composition') return `<div class="memory-guide"><b>组成清单</b><div class="dual-range"><span>组成项 A</span><span>组成项 B</span></div><div class="dual-range muted"><span>组成项 C</span><span>组成项 D</span></div>${note}</div>`;
-  if (memoryType === 'sequence') return `<div class="memory-guide"><b>顺序记忆</b><div class="formula-guide"><span>① 起点</span><strong>→</strong><span>② 中段</span><strong>→</strong><span>③ 终点</span></div>${note}</div>`;
+  if (memoryType === 'formula' || memoryType === 'relationship' || memoryType === 'composition' || memoryType === 'sequence') return wrap(note);
   return '';
 }
 
@@ -295,12 +485,11 @@ function renderReviewNote(status, note){
 
 function render(){
   const q = questions[index];
+  if (!q) return;
   const card = getCardState(index);
   const answered = currentAnswered;
   const chapterLabel = selectedChapter === 'all' ? '十章混合' : `第 ${selectedChapter} 章`;
 
-  $('#chapterEyebrow').textContent = `CAAC 认证 · ${chapterLabel}`;
-  $('#listTitle').textContent = `${chapterLabel}题目`;
   $('#cardNo').textContent = String(index + 1).padStart(2, '0');
   $('#progressLabel').textContent = `第 ${index + 1} / ${questions.length} 张`;
   $('#cardTag').textContent = answered ? '已练习' : '记忆挑战';
@@ -322,12 +511,12 @@ function render(){
     const isCorrect = Number.isInteger(selectedAnswer)
       ? selectedAnswer === q[2]
       : card.result === 'easy' || card.result === 'mid';
-    const memoryGuide = renderMemoryGuide(q[5], q[4], q[8]);
+    const memoryGuide = renderMemoryGuide(q[5], q[4], q[8], isCorrect);
     const tipText = memoryGuide ? '' : `<span>${esc(q[4] || '')}</span>`;
     $('#feedback').className = 'feedback ' + (isCorrect ? 'good' : 'retry');
     $('#feedback').innerHTML = isCorrect
       ? `<b>答对了！</b><br>${tipText}${memoryGuide}${renderReviewNote(q[6], q[7])}`
-      : `<b>这题先记住：${String.fromCharCode(65 + q[2])}. ${esc(q[1][q[2]])}</b><br>${tipText}${memoryGuide}${renderReviewNote(q[6], q[7])}`;
+      : `<b>正确答案：${String.fromCharCode(65 + q[2])}. ${esc(q[1][q[2]])}</b><br>${tipText}${memoryGuide}${renderReviewNote(q[6], q[7])}`;
     document.querySelectorAll('.choice').forEach((b, i) => {
       if (i === q[2]) b.classList.add('correct');
       if (Number.isInteger(selectedAnswer) && i === selectedAnswer && !isCorrect) b.classList.add('wrong');
@@ -336,23 +525,28 @@ function render(){
   }
 
   const stats = getStats();
-  const pct = Math.round((stats.done / questions.length) * 100);
-  const ringText = $('#ringText');
-  const ring = $('#ring');
+  const daily = getDailyTask();
+  const progressDone = currentScreen === 'daily' ? Math.min(daily.completed, DAILY_TARGET) : stats.done;
+  const progressTotal = currentScreen === 'daily' ? DAILY_TARGET : questions.length;
+  const pct = Math.round((progressDone / progressTotal) * 100);
+  const modeBarTitle = currentScreen === 'daily'
+    ? (daily.completed >= DAILY_TARGET ? '每日签到 · 已完成' : '每日签到')
+    : `${chapterLabel} · 逐章刷题`;
+  const modeBarFill = $('#modeBarFill');
+  const modeBarCount = $('#modeBarCount');
   const wrongCount = $('#wrongCount');
   const progressHint = $('#progressHint');
-  const accuracyLabel = $('#accuracyLabel');
   const accuracyStats = getAccuracyStats();
 
-  if (ringText) ringText.textContent = pct + '%';
-  if (ring) ring.style.background = `conic-gradient(#64d9b2 ${pct * 3.6}deg, #dfeaf7 0deg)`;
+  $('#modeBarTitle').textContent = modeBarTitle;
+  if (modeBarFill) modeBarFill.style.width = pct + '%';
+  if (modeBarCount) modeBarCount.textContent = `${progressDone}/${progressTotal}`;
   if (wrongCount) wrongCount.textContent = String(stats.wrong);
   if (progressHint) progressHint.textContent = stats.wrong > 0 ? '长期记忆' : '记忆强度';
-  if (accuracyLabel) accuracyLabel.textContent = accuracyStats.accuracy === null
-    ? '本章准确率：暂无数据'
-    : `本章准确率：${accuracyStats.accuracy}%（${accuracyStats.correct}/${accuracyStats.attempts}）`;
+  $('#accuracyChip').textContent = accuracyStats.accuracy === null ? '准确率 --' : `准确率 ${accuracyStats.accuracy}%`;
   renderChapterLevels();
-  renderPlan();
+  renderScreens();
+  renderMenu();
 }
 
 function choose(i){
@@ -366,6 +560,7 @@ function choose(i){
   if (!correct && !wrongReview && !retryQueue.some((item) => item.index === index)) {
     retryQueue.push({ index, remaining: 3 });
   }
+  if (isCurrentScopeComplete() && !hasPendingReview()) subView = 'completion';
   render();
 }
 
@@ -386,7 +581,17 @@ function next(){
   const retry = retryQueue.find((item) => item.remaining <= 0 && item.index !== index);
   if (retry) {
     retryQueue = retryQueue.filter((item) => item !== retry);
+    reinforcementQueue.push({ index: retry.index, remaining: 1 + Math.floor(Math.random() * 2) });
     index = retry.index;
+    save();
+    render();
+    return;
+  }
+  reinforcementQueue.forEach((item) => { item.remaining -= 1; });
+  const reinforcement = reinforcementQueue.find((item) => item.remaining <= 0 && item.index !== index);
+  if (reinforcement) {
+    reinforcementQueue = reinforcementQueue.filter((item) => item !== reinforcement);
+    index = reinforcement.index;
     save();
     render();
     return;
@@ -394,26 +599,6 @@ function next(){
   index = getNextIndex(index, true);
   save();
   render();
-}
-
-function showMode(m){
-  if (mode === 'exam' && m !== 'exam') stopExamTimer();
-  mode = m;
-  document.querySelectorAll('.tab').forEach((x) => x.classList.toggle('active', x.dataset.mode === m));
-  $('#studyView').hidden = m !== 'study';
-  $('#listView').hidden = m !== 'all';
-  $('#wrongView').hidden = m !== 'wrong';
-  $('#examView').hidden = m !== 'exam';
-  if (m === 'all' || m === 'wrong') renderList();
-  if (m === 'exam') {
-    if (!examQuestions.length || examSubmitted) {
-      startExam();
-    } else if (!examTimerId) {
-      examTimerId = setInterval(updateExamTimer, 1000);
-      updateExamTimer();
-    }
-    renderExam();
-  }
 }
 
 function shuffle(items){
@@ -475,13 +660,10 @@ function submitExam(){
   $('#examSubmit').hidden = true;
 }
 
-function renderList(){
-  const arr = mode === 'wrong'
-    ? questions.map((q, i) => [q, i]).filter(([, i]) => getCardState(i).result === 'hard')
-    : questions.map((q, i) => [q, i]);
+function renderWrongList(){
+  const arr = questions.map((q, i) => [q, i]).filter(([, i]) => getCardState(i).result === 'hard');
   $('#emptyWrong').hidden = arr.length > 0;
-  $('#listCount').textContent = arr.length + ' 题';
-  $('#questionList').innerHTML = arr.map(([q, i]) => `
+  $('#wrongList').innerHTML = arr.map(([q, i]) => `
     <button class="question-item" data-question-index="${i}" type="button">
       <span class="qnum">${String(i + 1).padStart(2, '0')}</span>
       <div>
@@ -490,15 +672,45 @@ function renderList(){
       </div>
     </button>
   `).join('');
-  $('#wrongList').innerHTML = mode === 'wrong' ? $('#questionList').innerHTML : '';
 }
 
 function retryCard(cardIndex){
   index = cardIndex;
   wrongReview = true;
   currentAnswered = false;
+  retryQueue = [];
+  reinforcementQueue = [];
   save();
-  showMode('study');
+  subView = 'study';
+  renderScreens();
+  render();
+}
+
+function continueFromCompletion(){
+  subView = 'study';
+  currentAnswered = false;
+  retryQueue = [];
+  reinforcementQueue = [];
+  renderScreens();
+  render();
+}
+
+function enterNextChapter(){
+  const nextChapter = availableChapters.find((chapter) => chapter > selectedChapter);
+  if (!nextChapter || !isChapterUnlocked(nextChapter)) return;
+  selectedChapter = nextChapter;
+  activeScopeKey = selectedChapter;
+  questions = getChapterQuestions(selectedChapter);
+  localStorage.setItem('caac-selected-scope', String(selectedChapter));
+  restoreIndex();
+  wrongReview = false;
+  currentAnswered = false;
+  retryQueue = [];
+  reinforcementQueue = [];
+  subView = 'study';
+  save();
+  renderChapterLevels();
+  renderScreens();
   render();
 }
 
@@ -512,6 +724,22 @@ $('#wrongList').onclick = (e) => {
   if (item) retryCard(Number(item.dataset.questionIndex));
 };
 $('#continueBtn').onclick = next;
+$('#modeChapters').onclick = enterChapters;
+$('#modeDaily').onclick = enterDaily;
+$('#calendarToggle').onclick = () => {
+  const calendar = $('#dailyCalendar');
+  const expanded = calendar.classList.toggle('expanded');
+  $('#calendarToggle').setAttribute('aria-expanded', String(expanded));
+};
+$('#calendarPrev').onclick = () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1); renderDailyCalendar(); };
+$('#calendarNext').onclick = () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1); renderDailyCalendar(); };
+$('#modeExam').onclick = enterExam;
+$('#backBtn').onclick = enterMenu;
+$('#completionHome').onclick = enterMenu;
+$('#completionNext').onclick = enterNextChapter;
+$('#completionWrong').onclick = () => { subView = 'wrong'; renderScreens(); renderWrongList(); };
+$('#completionContinue').onclick = continueFromCompletion;
+$('#wrongChip').onclick = () => { subView = 'wrong'; renderScreens(); renderWrongList(); };
 $('#examChoices').onclick = (e) => {
   const choice = e.target.closest('[data-exam-choice]');
   if (!choice || examSubmitted) return;
@@ -521,25 +749,51 @@ $('#examChoices').onclick = (e) => {
 $('#examPrev').onclick = () => { if (examIndex > 0) { examIndex -= 1; renderExam(); } };
 $('#examNext').onclick = () => { if (examIndex < examQuestions.length - 1) { examIndex += 1; renderExam(); } };
 $('#examSubmit').onclick = submitExam;
-document.querySelectorAll('.tab').forEach((x) => x.onclick = () => showMode(x.dataset.mode));
-$('#resetBtn').onclick = () => {
-  if (confirm('确定清空本章复习进度吗？')) {
-    questions.forEach((question) => {
+function closeResetChoice(){
+  $('#resetChoice').hidden = true;
+}
+
+function resetProgress(scope){
+  if (scope === 'global') {
+    state = normalizeState({});
+    selectedChapter = 1;
+    activeScopeKey = selectedChapter;
+    questions = getChapterQuestions(selectedChapter);
+    localStorage.removeItem('caac-ch1');
+    localStorage.setItem('caac-selected-scope', String(selectedChapter));
+  } else {
+    const chapterQuestions = getChapterQuestions(selectedChapter);
+    chapterQuestions.forEach((question) => {
       const id = question[3];
       delete state.cards[id];
       delete state.answerStats[id];
       delete state.selectedAnswers[id];
     });
     delete state.currentByChapter[selectedChapter];
-    wrongReview = false;
-    retryQueue = [];
-    currentAnswered = false;
-    index = getFreshStartIndex(questions.length);
-    save();
-    renderChapterLevels();
-    showMode('study');
-    render();
   }
-};
+  wrongReview = false;
+  retryQueue = [];
+  reinforcementQueue = [];
+  currentAnswered = false;
+  index = getFreshStartIndex(questions.length);
+  closeResetChoice();
+  save();
+  renderMenu();
+  renderChapterLevels();
+  subView = 'study';
+  renderScreens();
+  render();
+}
 
-render();
+$('#resetBtn').onclick = () => {
+  const chapterName = selectedChapter === 'all' ? '当前全部题目' : `第 ${selectedChapter} 章`;
+  $('#resetChoiceMessage').textContent = `本章重置只清除${chapterName}，全局重置会清除全部学习记录。`;
+  $('#resetChapter').textContent = selectedChapter === 'all' ? '重置当前全部题目' : `重置第 ${selectedChapter} 章`;
+  $('#resetChoice').hidden = false;
+};
+$('#resetChapter').onclick = () => resetProgress('chapter');
+$('#resetGlobal').onclick = () => resetProgress('global');
+$('#resetCancel').onclick = closeResetChoice;
+
+renderMenu();
+renderScreens();

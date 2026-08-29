@@ -52,8 +52,49 @@ window.CAAC_QUESTIONS = [
     ],
     "answer": 2,
     "tip": "I 类从 0 开始：空机＞0kg，起飞全重≤1.5kg。",
-    "memoryType": "threshold",
-    "specItems": null,
+    "memoryType": "full-classification",
+    "specItems": [
+      [
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        true
+      ],
+      [
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        false
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        false
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        false
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        false
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        false
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第01章.md",
@@ -91,9 +132,50 @@ window.CAAC_QUESTIONS = [
       "4kg＜空机质量≤15kg，7kg＜起飞全重≤25kg"
     ],
     "answer": 2,
-    "tip": "III 类看两条下限：空机＞4kg、全重＞7kg；上限是 15/25。",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "III 类要同时满足两条：4kg＜空机质量≤15kg，7kg＜起飞全重≤25kg。",
+    "memoryType": "full-classification",
+    "specItems": [
+      [
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        false
+      ],
+      [
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        false
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        true
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        false
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        false
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        false
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第01章.md",
@@ -264,16 +346,48 @@ window.CAAC_QUESTIONS = [
       "1.5kg＜空机重量≤4kg，25kg＜起飞全重≤150kg"
     ],
     "answer": 1,
-    "tip": "IV 类从 25kg 全重开始：空机 15–116、全重 25–150。",
-    "memoryType": "spec-list",
+    "tip": "IV 类要同时满足两条：15kg＜空机重量≤116kg，25kg＜起飞全重≤150kg。",
+    "memoryType": "full-classification",
     "specItems": [
       [
-        "空机质量",
-        "15–116kg"
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        false
       ],
       [
-        "起飞全重",
-        "25–150kg"
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        false
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        false
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        true
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        false
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        false
       ]
     ],
     "reviewStatus": "unreviewed",
@@ -294,15 +408,47 @@ window.CAAC_QUESTIONS = [
     ],
     "answer": 2,
     "tip": "II 类是小一档：空机 1.5–4、全重 1.5–7kg。",
-    "memoryType": "spec-list",
+    "memoryType": "full-classification",
     "specItems": [
       [
-        "空机质量",
-        "1.5–4kg"
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        false
       ],
       [
-        "起飞全重",
-        "1.5–7kg"
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        true
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        false
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        false
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        false
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        false
       ]
     ],
     "reviewStatus": "unreviewed",
@@ -322,9 +468,50 @@ window.CAAC_QUESTIONS = [
       "W<5700KG"
     ],
     "answer": 0,
-    "tip": "质量分类的高段：XI类是116＜W≤5700kg，XII类是W＞5700kg。",
-    "memoryType": "heavy-classification",
-    "specItems": null,
+    "tip": "XII 类完整边界：质量 W＞5700kg。",
+    "memoryType": "full-classification",
+    "specItems": [
+      [
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        false
+      ],
+      [
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        false
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        false
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        false
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        false
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        true
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第01章.md",
@@ -342,9 +529,50 @@ window.CAAC_QUESTIONS = [
       "116KG<W≤5700KG"
     ],
     "answer": 2,
-    "tip": "质量分类的高段：XI类是116＜W≤5700kg，XII类是W＞5700kg。",
-    "memoryType": "heavy-classification",
-    "specItems": null,
+    "tip": "XI 类完整边界：116kg＜质量 W≤5700kg。",
+    "memoryType": "full-classification",
+    "specItems": [
+      [
+        "I类",
+        "0＜空机≤1.5kg；全重≤7kg",
+        false
+      ],
+      [
+        "II类",
+        "1.5＜空机≤4kg；1.5＜全重≤7kg",
+        false
+      ],
+      [
+        "III类",
+        "4＜空机≤15kg；7＜全重≤25kg",
+        false
+      ],
+      [
+        "IV类",
+        "15＜空机≤116kg；25＜全重≤150kg",
+        false
+      ],
+      [
+        "V类",
+        "植保用途",
+        false
+      ],
+      [
+        "VI类",
+        "无人飞艇",
+        false
+      ],
+      [
+        "XI类",
+        "116＜W≤5700kg",
+        true
+      ],
+      [
+        "XII类",
+        "W＞5700kg",
+        false
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第01章.md",
@@ -462,9 +690,22 @@ window.CAAC_QUESTIONS = [
       "XII类"
     ],
     "answer": 1,
-    "tip": "植保是作业用途，对应 V 类。",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "先看分类维度：I–IV、XI–XII 类按质量/重量划分；V 类按作业用途分类，植保类属于 V 类；VI 类是无人飞艇。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "I–IV、XI–XII类",
+        "按质量/重量"
+      ],
+      [
+        "V类",
+        "按作业用途：植保"
+      ],
+      [
+        "VI类",
+        "无人飞艇"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第01章.md",
@@ -502,9 +743,18 @@ window.CAAC_QUESTIONS = [
       "在隔离空域内超视距运行的无人机"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "这里考的是规章划定的管理范围，不是凭类别大小推导：题设三种情况中，局方管理的是融合空域运行的 XI 类。融合空域会与其他航空器共享运行环境，因此需要纳入统一资质管理；隔离空域与外部交通分开，不按本条判断。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "融合 + XI",
+        "局方管理"
+      ],
+      [
+        "隔离空域超视距",
+        "不选局方"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -522,7 +772,7 @@ window.CAAC_QUESTIONS = [
       "运动或私用驾驶员执照"
     ],
     "answer": 2,
-    "tip": "3000米以下对应运动或私用；3000米以上再看商照。",
+    "tip": "3000米是规章设置的执照分界，不是由公式算出。分界以下对应运动或私用执照；它与第3题成对，先判断“在3000米哪一侧”，再选执照等级。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -542,7 +792,7 @@ window.CAAC_QUESTIONS = [
       "私照"
     ],
     "answer": 1,
-    "tip": "资格边界先看高度：3000米以上，选商照。",
+    "tip": "3000米以上运行面对更复杂的空域、气象和运行管理要求，所以规章把资质提高到商照。3000米是规定边界：以下运动或私用，以上商照。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -562,7 +812,7 @@ window.CAAC_QUESTIONS = [
       "云高不低于100米，能见度不小于3公里"
     ],
     "answer": 1,
-    "tip": "平原农业作业：云高150米、能见度5公里。",
+    "tip": "150米是平原农业作业的规定值，不是地形公式算出的。用场景对比记：平原障碍较少用150/5；山区障碍复杂提高到300/5；水域采用另一组200/3。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -582,8 +832,8 @@ window.CAAC_QUESTIONS = [
       "应在空中交通不繁忙的开阔水面或人口稀少区域上空实施"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "试验飞行本身存在未知故障和操纵风险，所以应选择开阔、人口稀少、交通不繁忙的区域，把可能的失控后果降到最低。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -602,7 +852,7 @@ window.CAAC_QUESTIONS = [
       "云高不得低于100米，水平能见度不得小于2公里"
     ],
     "answer": 0,
-    "tip": "广阔水域渔业飞行：云高200米、能见度3公里。",
+    "tip": "200/3是广阔水域渔业飞行的法规配对值，不能由“参照物少”直接算出。水面缺少地标，位置和高度感较弱；但固定障碍通常少于山区。答题时按场景区分：水域200/3，平原农业150/5，山区农业300/5。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -622,8 +872,8 @@ window.CAAC_QUESTIONS = [
       "夜间飞行时"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "城市人口和建筑密集，航空器异常时地面后果更严重；只有航路确实必须经过城市上空时，才按指定航路飞越。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -642,8 +892,8 @@ window.CAAC_QUESTIONS = [
       "着陆灯"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "航行灯用于持续表明航空器的方向和相对位置，便于其他航空器识别；防撞灯、着陆灯分别承担警示和照明，功能不同。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -662,7 +912,7 @@ window.CAAC_QUESTIONS = [
       "航图网格最低飞行高度"
     ],
     "answer": 0,
-    "tip": "安全高度问的是最低飞行高度。",
+    "tip": "安全高度首先要解决的是“不能撞地面或障碍物”，因此定义中的核心是最低飞行高度，不是另造一个更宽泛的名称。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -682,9 +932,22 @@ window.CAAC_QUESTIONS = [
       "管制空域、非管制空域和报告空域"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "空域按需要的服务强度分层：管制空域直接指挥，监视空域重点掌握动态，报告空域依靠飞行报告；三类对应不同管理方式。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "管制空域",
+        ""
+      ],
+      [
+        "监视空域",
+        ""
+      ],
+      [
+        "报告空域",
+        ""
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -702,8 +965,8 @@ window.CAAC_QUESTIONS = [
       "导航服务"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "空中交通服务的基础是把相关飞行信息提供给航空器，帮助驾驶员作出安全决策，所以包含飞行情报服务；机场保障和导航不是本题组合。",
+    "memoryType": "spec-list",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -722,7 +985,7 @@ window.CAAC_QUESTIONS = [
       "6000米"
     ],
     "answer": 2,
-    "tip": "高空空域边界：标准海平面气压6000米（不含）以上。",
+    "tip": "用标准海平面气压统一高度基准，才能让不同航空器比较垂直位置；6000米是法规划分高空与中低空的边界，不是气压公式推导值，而且题目明确“不含6000米”。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -742,9 +1005,14 @@ window.CAAC_QUESTIONS = [
       "国务院、中央军委空中交通管制委员会"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "全国飞行管制涉及国家空域和军民航空协调，不能由单一民航部门独立决定，所以由国务院、中央军委空中交通管制委员会领导。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "领导全国管制",
+        "国务院、中央军委空管委员会"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -762,8 +1030,8 @@ window.CAAC_QUESTIONS = [
       "通常情况下，民用航空器不得飞入禁区和限制区"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "同一管制空域必须有清楚且唯一的责任边界，两个单位同时负责会造成指令冲突和责任不清，因此 A 不正确。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -782,8 +1050,8 @@ window.CAAC_QUESTIONS = [
       "管制员"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "管制机场附近和地面航空器需要统一排序、间隔和放行，执行这些空中交通指令的是管制员，不是机长或机务人员。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -802,7 +1070,7 @@ window.CAAC_QUESTIONS = [
       "500、120"
     ],
     "answer": 2,
-    "tip": "视距内运行双边界：半径500米、相对高度低于120米。",
+    "tip": "视距内运行的限制是为了让驾驶员或观测员能持续看见并及时修正；因此用水平半径500米和相对高度120米定义范围。",
     "memoryType": "spec-list",
     "specItems": [
       [
@@ -831,8 +1099,8 @@ window.CAAC_QUESTIONS = [
       "得到机长的允许"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "改变航路或高度会影响其他航空器的间隔和管制计划，不能只由本机决定；必须先取得空中交通管制单位许可。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -851,8 +1119,8 @@ window.CAAC_QUESTIONS = [
       "所需联系的ATC的名称"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "无线电第一次呼叫要先确认“找的是哪个管制单位”，否则对方无法建立通信对象；所以先报 ATC 名称，再报航空器信息。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -871,9 +1139,14 @@ window.CAAC_QUESTIONS = [
       "国务院和中央军事委员会"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "空域管理同时关系国家空域和军民航空运行，需要国务院与中央军事委员会共同制定具体办法。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "制定空域办法",
+        "国务院和中央军委"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -891,8 +1164,8 @@ window.CAAC_QUESTIONS = [
       "军航的一个空中交通管制单位"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "一个空域只能有一个实际管制责任主体，才能保证指令唯一、间隔统一；具体可由军航或民航的一个单位负责。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -911,9 +1184,26 @@ window.CAAC_QUESTIONS = [
       "①②③④"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "民航法既要维护国家空域主权，也要保障飞行安全秩序、保护参与者利益并促进事业发展；四项目标是完整的一组。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "主权权利",
+        ""
+      ],
+      [
+        "安全秩序",
+        ""
+      ],
+      [
+        "合法利益",
+        ""
+      ],
+      [
+        "事业发展",
+        ""
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -931,9 +1221,22 @@ window.CAAC_QUESTIONS = [
       "①②"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "航空器活动既需要机场附近的起降空间，也需要点到点的航路航线，还要划出需要保护或限制进入的区域，因此通常分三块。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "机场飞行空域",
+        ""
+      ],
+      [
+        "航路航线",
+        ""
+      ],
+      [
+        "禁区/限制区/危险区",
+        ""
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -951,7 +1254,7 @@ window.CAAC_QUESTIONS = [
       "云高距作业区最高点不低于150米，能见度不小于3公里"
     ],
     "answer": 1,
-    "tip": "丘陵、山区、高原农业作业：云高300米、能见度5公里。",
+    "tip": "山区地形起伏大、障碍高，必须以作业区最高点为基准留垂直余量；300/5是法规规定值，不是现场计算结果。与平原150/5相比，山区把云高余量提高到300米。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -971,9 +1274,14 @@ window.CAAC_QUESTIONS = [
       "必须经中国民用航空总局空中交通管理局批准"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "没有识别标志就难以确认航空器身份和运行责任，属于需要特别核验的飞行，审批由中国人民解放军空军负责。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "无识别标志特殊飞行",
+        "空军批准"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -991,9 +1299,14 @@ window.CAAC_QUESTIONS = [
       "商照和仪表等级"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "XII 类的运行能力和风险要求高于 XI 类，除了商照还要有仪表等级，说明驾驶员能在缺少目视参照时按仪表运行。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "XII 类",
+        "商照 + 仪表等级"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1011,9 +1324,18 @@ window.CAAC_QUESTIONS = [
       "一至两批，1000米"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "批次越多，航空器在同一时间和空间重叠的机会越大，管制冲突也越难消除，所以通常限制为一至三批，并用2000米高度差分隔。批次和高度差都是规章值，原理只解释为何要限量、分层。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "批次",
+        "一至三批"
+      ],
+      [
+        "高度差",
+        "2000m"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1031,9 +1353,14 @@ window.CAAC_QUESTIONS = [
       "穿越的地段、进出点、高度和时间"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "穿越航路时，管制单位最需要知道“在哪里穿、飞多高、何时穿”，这三项能用于冲突评估；其他细节不能替代基本信息。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "穿越要素",
+        "地段 + 高度 + 时间"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1051,8 +1378,8 @@ window.CAAC_QUESTIONS = [
       "平原地区不小于300米，丘陵山区不小于600米"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "等待空域要在最高障碍物上方留出垂直安全余量，避免盘旋等待时接近地形；本题是至少600米，不要和农业天气标准混在一起。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1071,9 +1398,14 @@ window.CAAC_QUESTIONS = [
       "飞行备降机场的航向，飞行高度，油量和通知备降机场的天气情况"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "通知备降后，飞机必须知道往哪飞、飞多高以及目的地天气是否适合接收，因此要同时给出航向、高度和备降机场天气。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "备降指示",
+        "航向 + 高度 + 机场天气"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1091,9 +1423,18 @@ window.CAAC_QUESTIONS = [
       "通常为15公里，受条件限制时宽度不小于10公里"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "空中走廊是把航空器集中在有限通道内运行，宽度既要容纳偏差又要控制空域占用，所以通常10公里、受限时不小于8公里。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "通常宽度",
+        "10km"
+      ],
+      [
+        "受限下限",
+        "8km"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1111,9 +1452,14 @@ window.CAAC_QUESTIONS = [
       "实际大气压条件下假定海平面"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "高度层必须使用共同基准，才能让不同航空器保持可靠垂直间隔；标准大气压和假定海平面就是这套统一基准。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "计算基准",
+        "标准大气压 + 假定海平面"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1131,9 +1477,14 @@ window.CAAC_QUESTIONS = [
       "飞行任务的性质、航空器性能、飞行区域以及航线的地形、天气和飞行情况等"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "高度层不是只看航路方向，还要让航空器性能、任务需求与地形天气相容；这些条件共同决定飞哪一层更安全。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "配备依据",
+        "任务 + 性能 + 空域 + 地形天气"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1151,8 +1502,8 @@ window.CAAC_QUESTIONS = [
       "进入驾驶舱后到飞行结束离开驾驶舱"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "开车后航空器已进入运行准备，关车后才结束本次运行；持续保持无线电联络可以让管制单位掌握完整运行过程。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1171,9 +1522,14 @@ window.CAAC_QUESTIONS = [
       "任务性质、航空器型别、装载情况、起止时间、飞行高度和飞行条件"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "飞行申请要让管理部门判断“谁、用什么、去哪、何时、飞多高、在什么条件下飞”，装载情况不属于本题列出的申请要素。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "申请内容",
+        "任务/型别/范围/起止时间/高度/条件"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1191,8 +1547,8 @@ window.CAAC_QUESTIONS = [
       "按照国家规定经批准后方可飞入"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "禁区的设立是为了保护重要目标，但空域管理也要保留依法批准的特殊运行通道；因此不是任何情况下都绝对禁止。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1211,9 +1567,14 @@ window.CAAC_QUESTIONS = [
       "按照该机场使用细则或者进离场程序"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "进离场阶段靠近机场和其他航空器，程序必须与机场实际运行匹配，所以依据机场使用细则或公布的进离场程序执行。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "进离场依据",
+        "机场细则或进离场程序"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1231,9 +1592,14 @@ window.CAAC_QUESTIONS = [
       "航线(航向)、高度"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "进出空域要报告的是航线（航向）、高度和次序：它们分别说明“往哪飞、飞多高、排第几”，方便管制单位安排动态间隔。进出点只是空域划定的地理位置，不是航空器需要保持或排序的飞行状态，所以不列入这组三项。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "进入脱离要素",
+        "航向 + 高度 + 次序"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1251,8 +1617,8 @@ window.CAAC_QUESTIONS = [
       "可以，但必须在规定时限以外"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "危险区的风险通常集中在公告的活动时段，避开规定时限即可降低冲突；题目强调的是“时限以外”，不是一律重新审批。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1271,8 +1637,8 @@ window.CAAC_QUESTIONS = [
       "中国人民解放军空军"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "航路航线是多架航空器共同使用的交通通道，使用前必须得到负责该通道的飞行管制部门同意，以便安排冲突和间隔。",
+    "memoryType": "spec-list",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1291,9 +1657,14 @@ window.CAAC_QUESTIONS = [
       "高空管制区，中低空管制区，终端(进近)管制区，机场塔台管制区"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "管制区按服务范围和高度逐层组织，从高空、中低空到终端进近和机场塔台，便于把不同阶段的管制责任分开。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "管制区层级",
+        "高空/中低空/终端进近/机场塔台"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1311,8 +1682,8 @@ window.CAAC_QUESTIONS = [
       "25公里"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "航路需要给航空器留出横向偏差和安全间隔，因此标准宽度为20公里；受限宽度另看第42题的最低值。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1331,8 +1702,8 @@ window.CAAC_QUESTIONS = [
       "15公里"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "特殊地形或空域条件可能压缩航路宽度，但不能压缩到无法保证横向安全间隔的程度，所以底线是8公里；空中走廊要看另一套定义。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1351,9 +1722,14 @@ window.CAAC_QUESTIONS = [
       "必须经由国务院、中央军委空中交通管制委员会批准"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "进出国家领空或跨越不同管制责任区域会涉及国家空域权限和统一协调，因此批准主体是中国人民解放军空军。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "领空飞行批准",
+        "中国人民解放军空军"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1371,8 +1747,8 @@ window.CAAC_QUESTIONS = [
       "必须取得空中交通管制单位的许可"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "管制空域内的航迹和高度需要统一安排，擅自进入会破坏其他航空器的间隔，所以必须先取得空中交通管制单位许可。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1391,8 +1767,8 @@ window.CAAC_QUESTIONS = [
       "机场飞行(塔台)管制区"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "机场区域围绕起降活动设置，塔台最直接掌握跑道和机场附近交通，因此机场区域通常对应机场飞行（塔台）管制区。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1411,9 +1787,14 @@ window.CAAC_QUESTIONS = [
       "进入的飞行高度、气象条件"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "机场需要判断航空器进入后如何安排，进入高度、区域飞行情况和气象条件分别说明位置、意图和环境，三项共同构成必要信息。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "机场通报",
+        "高度 + 飞行情况 + 气象"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1431,8 +1812,8 @@ window.CAAC_QUESTIONS = [
       "17时前"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "普通飞行计划需要跨单位审核、协调空域并排除航路冲突，所以不能临飞才报。前一日15时是规定的截止点；原理解释为什么要提前，具体钟点仍需按法规记忆。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1451,9 +1832,22 @@ window.CAAC_QUESTIONS = [
       "C类"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "空域字母代表不同服务和高度范围；6000米以下至最低高度层以上属于中低空范围，对应 B 类。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "A类",
+        "高空"
+      ],
+      [
+        "B类",
+        "中低空"
+      ],
+      [
+        "C类",
+        "终端"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1471,8 +1865,8 @@ window.CAAC_QUESTIONS = [
       "不能在其他空划定机场区域"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "相邻机场距离过近时分别划区会造成范围重叠和管制冲突，合划一个机场区域可以统一管理起降活动。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1491,8 +1885,8 @@ window.CAAC_QUESTIONS = [
       "航路和固定航线"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "备降机场必须在飞行途中可依航路到达，才能在主机场不可用时真正发挥作用，所以沿航路和固定航线设置。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1511,8 +1905,8 @@ window.CAAC_QUESTIONS = [
       "15公里"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "仪表飞行依赖仪表而非持续目视地面，空域边界需要更明确的缓冲距离，10公里是题目要求的安全间隔。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1531,9 +1925,14 @@ window.CAAC_QUESTIONS = [
       "航路飞行管制区、空域飞行管制区、机场飞行管制区"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "管制责任按范围逐级细分：先是飞行管制区，再到分区，最后到机场管制区；层级越小，责任越贴近具体运行。",
+    "memoryType": "sequence",
+    "specItems": [
+      [
+        "责任三级",
+        "管制区 → 分区 → 机场区"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1551,9 +1950,14 @@ window.CAAC_QUESTIONS = [
       "国务院和中央军委"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "统一飞行规则必须让全国军民航空器遵守同一套基本秩序，涉及国家空域和公共安全，所以由国务院和中央军委制定。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "统一飞行规则",
+        "国务院和中央军委"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1571,8 +1975,8 @@ window.CAAC_QUESTIONS = [
       "2小时"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "紧急任务可以走快速通道，但仍要给管制部门留下核验、协调和发布指令的时间，所以法规规定最迟提前1小时申请；30分钟虽然更快，却不满足这条规定。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1591,9 +1995,22 @@ window.CAAC_QUESTIONS = [
       "30分钟"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "“日出前不早于30分钟”表示最早可在日出前30分钟起飞。平原、丘陵较易识别地形，可比山区更早开始；30分钟是规定值，不是按亮度计算出来的。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "平原/丘陵起飞",
+        "日出前30分钟"
+      ],
+      [
+        "山区起飞",
+        "日出前20分钟"
+      ],
+      [
+        "山区着陆",
+        "日落前15分钟"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1611,8 +2028,8 @@ window.CAAC_QUESTIONS = [
       "20分钟"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "山区地形和阴影更复杂，需要等到更接近日出、光线更充足时再起飞，所以最早只能到日出前20分钟，比平原、丘陵的30分钟晚10分钟。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1631,8 +2048,8 @@ window.CAAC_QUESTIONS = [
       "20分钟"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "山区着陆要识别坡地、障碍和下滑路径，不能拖到日落后光线迅速变差；因此规定最晚在日落前15分钟着陆。15分钟是法规边界，原因是保留目视安全余量。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -1651,9 +2068,14 @@ window.CAAC_QUESTIONS = [
       "由中国民用航空总局空中交通管理局统一组织实施，各有关飞行管制部门按照各自的职责分工提供空中交通管制服务"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "全国飞行管制需要统一组织和协调，空军负责统一组织实施，其他空管部门则在各自职责内提供具体服务。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "统一组织实施",
+        "中国人民解放军空军"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第02章.md",
@@ -1671,7 +2093,7 @@ window.CAAC_QUESTIONS = [
       "50公里"
     ],
     "answer": 1,
-    "tip": "1:50万：图上1厘米代表地面5公里。",
+    "tip": "比例尺1:50万表示图上距离缩小为实地的五十万分之一：图上1厘米=实地50万厘米=5公里。分母越大，同样纸面能画的范围越大，但细节越少。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -1691,7 +2113,7 @@ window.CAAC_QUESTIONS = [
       "1.61公里"
     ],
     "answer": 0,
-    "tip": "1海里=1.85公里。",
+    "tip": "海里是航海和航空常用距离单位，因为地球纬度与航海定位相关；1海里=1.85公里。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -1751,7 +2173,7 @@ window.CAAC_QUESTIONS = [
       "航线距离最长"
     ],
     "answer": 1,
-    "tip": "大圆航线的核心：两点之间距离最短。",
+    "tip": "地球表面两点的最短路径受球面弯曲影响，所以沿大圆走最短，记“球面最短走大圆”。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -1771,7 +2193,7 @@ window.CAAC_QUESTIONS = [
       "两点之间大圆的弧长"
     ],
     "answer": 2,
-    "tip": "最短航线就是大圆弧长。",
+    "tip": "大圆航线是球面上的最短弧线；平面地图上的直线可能只是投影结果，不能直接当最短航线。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -2171,7 +2593,7 @@ window.CAAC_QUESTIONS = [
       "6厘米"
     ],
     "answer": 0,
-    "tip": "1:10万地图：2公里=2厘米。",
+    "tip": "1:10万表示图上1厘米=实地10万厘米=1公里，因此实地2公里对应图上2厘米。先统一单位，再按缩小倍数换算。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -2231,7 +2653,7 @@ window.CAAC_QUESTIONS = [
       "150米"
     ],
     "answer": 1,
-    "tip": "起落航线一转弯、四转弯高度一般不低于100米。",
+    "tip": "转弯阶段既要保持航迹又要避开障碍，需要留出姿态和高度修正余量；100米是题目采用的规定下限，安全原理不能精确推导出这个数。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -2291,8 +2713,8 @@ window.CAAC_QUESTIONS = [
       "18个，20°"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "地球自转使不同经度时间不同；全球360°分成24小时，所以360÷24=15°，即每15°约差一个时区。",
+    "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -2431,8 +2853,8 @@ window.CAAC_QUESTIONS = [
       "修正海平面气压"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "真航线角以真北为基准，磁航线角以磁北为基准；参考北方不同，角度就不能混用。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -3211,7 +3633,7 @@ window.CAAC_QUESTIONS = [
       "飞行预先准备、飞行直接准备、飞行实施和飞行讲评四个阶段"
     ],
     "answer": 2,
-    "tip": "飞行组织四阶段：预先准备→直接准备→飞行实施→飞行讲评。",
+    "tip": "飞行组织四阶段对应风险逐步收敛：预先准备定方案，直接准备查现场，实施中执行，讲评后复盘；记“预直实施讲评”。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -3471,7 +3893,7 @@ window.CAAC_QUESTIONS = [
       "①③"
     ],
     "answer": 2,
-    "tip": "电子围栏记两件事：阻挡侵入 + 报警。",
+    "tip": "电子围栏解决“飞入后才发现”太晚的问题，所以必须同时阻挡侵入并报警，记“拦住并提醒”。",
     "memoryType": "spec-list",
     "specItems": [
       [
@@ -3520,7 +3942,7 @@ window.CAAC_QUESTIONS = [
       "①②③"
     ],
     "answer": 2,
-    "tip": "失控预案按对象分：回收、云端上报、未接入云则联系空管上报。",
+    "tip": "失控后先争取恢复控制，再按通信条件上报：能回收先回收，能上云就云端上报，未接云则联系空管。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -3740,9 +4162,18 @@ window.CAAC_QUESTIONS = [
       "III、IV、VI、VII类无人机"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "电子围栏优先覆盖风险更高的类别和重点区域，因为这些地方一旦误入后果更大；记“高风险类别 + 重点地区”。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "高风险类别",
+        "III、IV、VI、VII类"
+      ],
+      [
+        "重点范围",
+        "重点地区、机场净空区下II/V类"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第04章.md",
@@ -3800,7 +4231,7 @@ window.CAAC_QUESTIONS = [
       "主动反馈系统（运营人主动发送）"
     ],
     "answer": 0,
-    "tip": "监视系统获取运行信息：两种方式都包括。",
+    "tip": "监视需要既能接收外部观测，也能收运营人主动报告，所以分为被动反馈和主动反馈两路。",
     "memoryType": "spec-list",
     "specItems": [
       [
@@ -3989,8 +4420,8 @@ window.CAAC_QUESTIONS = [
       "①②③④"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "申请是事前提出，批准是主管部门授权，执行是实际飞行；先分清动作，再记对应期限或主体。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -4109,8 +4540,8 @@ window.CAAC_QUESTIONS = [
       "10"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "监视系统只能帮助“看见并发现”运行状态，发现后还要上报和处置；记“发现不等于解决”。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -4849,7 +5280,7 @@ window.CAAC_QUESTIONS = [
       "电源"
     ],
     "answer": 0,
-    "tip": "供电系统负责给各用电系统和设备提供电能。",
+    "tip": "供电系统的任务是提供能量，控制系统的任务是处理指令；先问“它供的是电还是命令”，记“供电不等于控制”。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -4869,7 +5300,7 @@ window.CAAC_QUESTIONS = [
       "飞控与导航系统"
     ],
     "answer": 1,
-    "tip": "地面站四功能：指挥调度、任务规划、操作控制、显示记录。",
+    "tip": "地面站要把任务从计划变成可执行操作，所以四功能是指挥调度、任务规划、操作控制、显示记录，记“指、规、控、显”。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -4909,8 +5340,8 @@ window.CAAC_QUESTIONS = [
       "1430-1446MHz"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "飞控负责让飞机按要求稳定飞行，任务载荷负责完成拍摄、测量等任务；按“飞行安全”和“任务目标”分工。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -4989,7 +5420,7 @@ window.CAAC_QUESTIONS = [
       "载荷控制站"
     ],
     "answer": 1,
-    "tip": "控制站由飞行操纵、任务载荷、数据链路、通信指挥组成。",
+    "tip": "控制站既要操纵飞行，又要管理载荷和通信，因此由飞行操纵、任务载荷、数据链路、通信指挥组成。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -5089,8 +5520,8 @@ window.CAAC_QUESTIONS = [
       "导航飞控系统"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "导航回答“在哪里”，飞控回答“怎么稳”，通信回答“怎么联”；功能不同是因为输入和输出对象不同。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -5169,7 +5600,7 @@ window.CAAC_QUESTIONS = [
       "高度、速度、位置"
     ],
     "answer": 2,
-    "tip": "导航输出三项：高度、速度、位置。",
+    "tip": "导航要支持定位、速度判断和高度保持，因此核心输出是高度、速度、位置，记“高、速、位”。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -5229,7 +5660,7 @@ window.CAAC_QUESTIONS = [
       "无刷电机"
     ],
     "answer": 0,
-    "tip": "电动动力系统：电机 + 动力电源 + 调速系统。",
+    "tip": "电动动力系统把电能变成可控推力：动力电源供能，调速系统调节，电机执行。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -5329,7 +5760,7 @@ window.CAAC_QUESTIONS = [
       "无人机起飞与着陆控制，无人机飞行管理，信息收集与传递"
     ],
     "answer": 0,
-    "tip": "飞控核心三项：姿态稳定控制、飞行管理、应急控制。",
+    "tip": "飞控既要保持姿态，又要管理飞行状态，还要应对异常；三项分别对应稳定、正常运行和安全兜底。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -5409,8 +5840,8 @@ window.CAAC_QUESTIONS = [
       "增加转速"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "自动控制必须先感知环境，再计算决策，最后驱动动作；所以是“感知→决策→执行”，不能颠倒。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -5769,7 +6200,7 @@ window.CAAC_QUESTIONS = [
       "电缆、供电系统、用电设备"
     ],
     "answer": 1,
-    "tip": "电气系统三部分：电源、配电系统、用电设备。",
+    "tip": "电能要经过产生、分配、使用三个环节，所以电气系统分为电源、配电系统、用电设备。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -5789,7 +6220,7 @@ window.CAAC_QUESTIONS = [
       "飞行器平台、通讯链路"
     ],
     "answer": 1,
-    "tip": "无人机系统三要素：飞行器平台、控制站、通信链路。",
+    "tip": "无人机系统要有飞行平台执行运动、控制站发出指令、通信链路传递信息，三者缺一信息链就断。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6229,7 +6660,7 @@ window.CAAC_QUESTIONS = [
       "任务分配"
     ],
     "answer": 1,
-    "tip": "载荷规划管设备：传感器、摄像机、任务设备和工作模式。",
+    "tip": "载荷规划决定任务效果，因为传感器和摄像机不同，采集方式也不同；核心是“带什么、怎么用”。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6249,7 +6680,7 @@ window.CAAC_QUESTIONS = [
       "通信规划"
     ],
     "answer": 2,
-    "tip": "通信规划管通信任务和与任务控制站的通信方式。",
+    "tip": "通信规划解决信息能否可靠往返，所以要同时考虑通信任务和与任务控制站的通信方式。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6269,7 +6700,7 @@ window.CAAC_QUESTIONS = [
       "任务规划"
     ],
     "answer": 0,
-    "tip": "航线规划记位置、航高、速度和到达时间段。",
+    "tip": "航线规划把任务目标变成飞行参数：位置决定去哪，航高和速度决定怎么飞，到达时间段决定何时到。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6349,7 +6780,7 @@ window.CAAC_QUESTIONS = [
       "实时规划，快速航迹规划算法"
     ],
     "answer": 2,
-    "tip": "实时规划=根据变化修改预案，快速生成安全航迹。",
+    "tip": "实时规划的原因是环境会变化；它是在原任务目标不变时快速修改航迹，不是重新定义任务。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6389,8 +6820,8 @@ window.CAAC_QUESTIONS = [
       "安全返航策略"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "任务规划回答“做什么”，航线规划回答“怎么到”；先定目标，再把目标落成路径。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -6449,7 +6880,7 @@ window.CAAC_QUESTIONS = [
       "飞行航迹"
     ],
     "answer": 0,
-    "tip": "电子地图显示位置、航迹、规划点和规划航迹。",
+    "tip": "电子地图把实时状态和计划状态放在一起，便于发现偏差；所以要显示位置、航迹、规划点和规划航迹。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6569,8 +7000,8 @@ window.CAAC_QUESTIONS = [
       "组合导航"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "航点是飞行器执行任务的具体动作接口，位置、高度、速度和动作缺一都可能让执行结果偏离。",
+    "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -6689,8 +7120,8 @@ window.CAAC_QUESTIONS = [
       "最大转弯半径和最大俯仰角"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "自动规划只代表生成了方案，检查验证是为了确认方案符合地形、空域和设备能力。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -6809,7 +7240,7 @@ window.CAAC_QUESTIONS = [
       "任务分配、姿态控制、导航控制、航迹规划、航迹调整和航迹评价"
     ],
     "answer": 1,
-    "tip": "任务规划六环节：理解→评估→分配→规划→优化→评价。",
+    "tip": "六环节从理解到评价形成闭环：先弄清任务，再配置资源，最后用评价反馈优化。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -6849,8 +7280,8 @@ window.CAAC_QUESTIONS = [
       "飞行规划"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "任务规划管目标和资源，航线规划管路径和参数；层级不同，所以不能当同义词。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -6989,8 +7420,8 @@ window.CAAC_QUESTIONS = [
       "最小转弯半径，最大俯仰角"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "异常处置要先判断状态再选动作，因为返航、备降和改航的适用条件不同。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -7069,8 +7500,8 @@ window.CAAC_QUESTIONS = [
       "应急预案规划"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "最短路线只优化距离，安全和可执行性还要考虑障碍、通信和设备能力，所以最短不一定最好。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -7209,7 +7640,7 @@ window.CAAC_QUESTIONS = [
       "应急迫降点，安全返航策略"
     ],
     "answer": 1,
-    "tip": "应急航线三件套：安全返航通道、应急迫降点、航线转移策略。",
+    "tip": "应急航线要同时解决“怎么回、哪里降、回不去怎么办”，因此是返航通道、迫降点、转移策略三件套。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -7329,7 +7760,7 @@ window.CAAC_QUESTIONS = [
       "360A"
     ],
     "answer": 0,
-    "tip": "6S=22.2V；最大电流=容量12Ah×3C=36A。",
+    "tip": "电池容量表示能提供多少电量，C 倍率表示能以多大电流释放；所以最大电流=12Ah×3C=36A。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -7349,7 +7780,7 @@ window.CAAC_QUESTIONS = [
       "11100转/分"
     ],
     "answer": 2,
-    "tip": "KV×电压：1000×11.1=11100转/分。",
+    "tip": "KV 表示每升高1V的理论转速，电压越高理论转速越高；1000×11.1=11100转/分。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -7409,8 +7840,8 @@ window.CAAC_QUESTIONS = [
       "小于60A"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "串联是把电池电压首尾相加，容量通道没有因此变宽，所以主要增加电压；看到S先想电压。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -7629,8 +8060,8 @@ window.CAAC_QUESTIONS = [
       "俯视顺时针/逆时针旋翼依次相邻排布"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "电机把电能变成转矩，电调调电流，螺旋桨把转动变成推力；三者必须按电压、电流和动力余量匹配。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -7649,7 +8080,7 @@ window.CAAC_QUESTIONS = [
       "该电机反向运转"
     ],
     "answer": 2,
-    "tip": "三根电机线任意调两根，电机反转。",
+    "tip": "三相电机换相序会改变旋转磁场方向，任意调换两根线就会反转，记“换两线=换相序”。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -7789,9 +8220,22 @@ window.CAAC_QUESTIONS = [
       "俯视多轴飞行器两两对应"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "动力系统最终要提供足够推力且不超载，因此选型要同时核对电压、电流、功率和余量，不能只盯KV。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "先看",
+        "电压"
+      ],
+      [
+        "再看",
+        "电流/功率"
+      ],
+      [
+        "最后留",
+        "动力余量"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第07章.md",
@@ -7969,7 +8413,7 @@ window.CAAC_QUESTIONS = [
       "飞控-电调-机载遥控接收机-电机"
     ],
     "answer": 1,
-    "tip": "信号顺序：接收机→飞控→电调→电机。",
+    "tip": "控制指令要从接收端逐级变成电机动作，所以顺序是接收机→飞控→电调→电机，记“收、控、调、转”。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -8249,7 +8693,7 @@ window.CAAC_QUESTIONS = [
       "10A的电调"
     ],
     "answer": 0,
-    "tip": "电调额定电流应高于持续工作电流，10A可选50A。",
+    "tip": "电调电流过限会发热甚至损坏，额定值高于持续工作电流是为了覆盖持续负载和瞬时峰值。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -8329,7 +8773,7 @@ window.CAAC_QUESTIONS = [
       "电调所能承受的最小工作电流是30安培"
     ],
     "answer": 1,
-    "tip": "电调30A指能承受的最大瞬间电流为30A。",
+    "tip": "电调30A是能力上限，不是建议长期工作的电流；持续使用还要留散热和峰值余量。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -8349,7 +8793,7 @@ window.CAAC_QUESTIONS = [
       "电调能从较细的红线与黑线向外输出5V的电压"
     ],
     "answer": 2,
-    "tip": "BEC 5V：从红黑线输出5V。",
+    "tip": "BEC 的作用是把动力电池较高电压降为舵机、飞控可用的稳定5V，红黑线负责供电。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -8369,7 +8813,7 @@ window.CAAC_QUESTIONS = [
       "电机最大耐压1000KV"
     ],
     "answer": 1,
-    "tip": "KV值=每1V电压对应的理论转速。",
+    "tip": "KV 是空载近似的转速常数，实际转速会因负载造成的压降和电机反电动势而降低。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -11429,7 +11873,7 @@ window.CAAC_QUESTIONS = [
       "6级"
     ],
     "answer": 1,
-    "tip": "地面风速大于4级，会影响安全和拍摄稳定。",
+    "tip": "风越大，姿态和位置修正越频繁，会影响安全和拍摄稳定；4级是作业采用的规定警戒线，风险原理解释为何设限，但不能推导出恰好4级。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -11669,7 +12113,7 @@ window.CAAC_QUESTIONS = [
       "20m/s"
     ],
     "answer": 2,
-    "tip": "雷暴成熟后冷空气下沉，阵风常达20m/s。",
+    "tip": "雷暴成熟阶段降水拖拽冷空气下沉，形成强下沉气流和阵风；20m/s是题库采用的典型数值，记住成因比孤立记数字更可靠。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -11709,7 +12153,7 @@ window.CAAC_QUESTIONS = [
       "10-14米/秒"
     ],
     "answer": 0,
-    "tip": "风向袋吹平：风速约6–10m/s。",
+    "tip": "风向袋被吹平说明气流已足以克服自重并完全展开，代表中大风；6–10m/s是风向袋状态对应的经验区间，不是精确瞬时测量。",
     "memoryType": "range-distance",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -12009,7 +12453,7 @@ window.CAAC_QUESTIONS = [
       "在100%的相对湿度时，周围环境的温度高于露点温度"
     ],
     "answer": 0,
-    "tip": "空气达到饱和时：气温=露点温度。",
+    "tip": "露点是空气达到饱和时的温度；气温降到露点，继续冷却就容易凝结成雾或云，所以二者相等是饱和临界。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -12029,7 +12473,7 @@ window.CAAC_QUESTIONS = [
       "15摄氏度"
     ],
     "answer": 2,
-    "tip": "华氏转摄氏：59°F=15°C。",
+    "tip": "华氏和摄氏零点、刻度不同，先减去华氏零点32，再按刻度比5/9换算；59°F正好是15°C。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -12429,7 +12873,7 @@ window.CAAC_QUESTIONS = [
       "积云阶段、成熟阶段、消散阶段"
     ],
     "answer": 2,
-    "tip": "雷暴三阶段：积云→成熟→消散。",
+    "tip": "雷暴先发展、再由上升和下沉气流并存进入成熟、最后下沉气流占主导而消散；成熟阶段同时存在强上升、下沉和降水，危险最集中。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -12509,7 +12953,7 @@ window.CAAC_QUESTIONS = [
       "78%的氮气，20%的氧气以及2%的其它气体组成"
     ],
     "answer": 0,
-    "tip": "大气组成约78%氮、21%氧、1%其他。",
+    "tip": "78%氮、21%氧、约1%其他是对近地大气成分的测量结果，不能由气体性质推导；氮最多、氧约五分之一可用于建立数量级记忆。",
     "memoryType": "spec-list",
     "specItems": [
       [
@@ -12582,8 +13026,8 @@ window.CAAC_QUESTIONS = [
       "海平面气压"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "温度描述冷热，湿度描述水汽，气压描述空气受力状态，风描述空气运动；先确认题目问的是哪个量。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -12602,8 +13046,8 @@ window.CAAC_QUESTIONS = [
       "外力作用消失后，以匀速持续运动"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "空气上升时外界气压降低，空气膨胀并冷却；降到露点后水汽凝结，才形成云。完整链条是“上升→膨胀冷却→饱和凝结”。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -12742,8 +13186,8 @@ window.CAAC_QUESTIONS = [
       "先遇强逆风，后遇猛烈的下沉气流，随后又是强顺风"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "风切变会在很短距离内改变相对气流，空速和升力随之突变，因此危险不只是“风大”。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -12882,8 +13326,8 @@ window.CAAC_QUESTIONS = [
       "摩擦力"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "起飞和着陆时高度低、速度变化空间小，遇到风切变后留给驾驶员的修正时间最短。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -13062,7 +13506,7 @@ window.CAAC_QUESTIONS = [
       "5.5-7.9m/s"
     ],
     "answer": 2,
-    "tip": "4级风：5.5–7.9m/s。",
+    "tip": "风级是按风速区间定义的等级表，不是现场用公式推导；4级对应5.5–7.9m/s。原理只说明风越大影响越强，具体区间要按标准表记。",
     "memoryType": "range-distance",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -13282,8 +13726,8 @@ window.CAAC_QUESTIONS = [
       "仅在雷暴中出现"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "雷暴的主要威胁来自强对流、下沉气流和阵风，它们会迅速改变升力与航迹，不要只看有没有下雨。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -13342,8 +13786,8 @@ window.CAAC_QUESTIONS = [
       "在最后进近时，来自全无植被的地形的下降气流有时会产生下沉效应，导致飞过预期的着陆点"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "水面或植被会改变近地气流，进近时可能出现局地下沉；所以接地前不能只套用平地经验。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -15382,7 +15826,7 @@ window.CAAC_QUESTIONS = [
       "偏流减小，地速减小"
     ],
     "answer": 0,
-    "tip": "风速增大：偏流增大；顺侧风地速增大。",
+    "tip": "风是相对地面的空气运动，飞行器的地速是空速和风速的合成；所以顺风地速增大、风大偏流影响更明显。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -15402,7 +15846,7 @@ window.CAAC_QUESTIONS = [
       "偏流减小，地速在逆侧风时增大"
     ],
     "answer": 2,
-    "tip": "风速减小：偏流减小；逆侧风地速增大。",
+    "tip": "逆风会抵消前进速度，侧风会造成偏流；先分清风向，再判断地速和航向修正。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -15422,7 +15866,7 @@ window.CAAC_QUESTIONS = [
       "地速增大，偏流不变"
     ],
     "answer": 1,
-    "tip": "真空速增大：地速增大、偏流减小。",
+    "tip": "真空速越大，固定风速相对飞行速度的占比越小，侧向偏移相对减弱；但地速仍由空速和风速合成。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -15662,8 +16106,8 @@ window.CAAC_QUESTIONS = [
       "阻力最小"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "机翼升力随迎角增加先增大，达到临界迎角时升力系数最大；再增加会分离失速。",
+    "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -15722,8 +16166,8 @@ window.CAAC_QUESTIONS = [
       "L=Wg"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "迎角描述翼弦线与相对气流的夹角，决定气流如何绕过机翼；它不是机身与地面的姿态角。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -15822,8 +16266,8 @@ window.CAAC_QUESTIONS = [
       "飞机振荡的振幅不增大也不减小"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "升力可理解为动压、翼面积和升力系数共同作用的结果，所以要同时看速度、密度、面积和迎角。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -15842,8 +16286,8 @@ window.CAAC_QUESTIONS = [
       "飞机振荡的振幅不增大也不减小"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "速度下降会使动压约按速度平方下降，升力随之减小；要保持升力就必须及时修正迎角或功率。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -16062,7 +16506,7 @@ window.CAAC_QUESTIONS = [
       "升力将减小"
     ],
     "answer": 1,
-    "tip": "垂直向上突风使升力增大。",
+    "tip": "向上突风使相对气流瞬间从下方来，迎角和升力短时增加；记“上突风先增升力”。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -16582,8 +17026,8 @@ window.CAAC_QUESTIONS = [
       "保持偏离后的平衡状态的趋势"
     ],
     "answer": 1,
-    "tip": "",
-    "memoryType": null,
+    "tip": "失速的判据是超过临界迎角；低速只是更容易在维持升力时把迎角拉过临界值。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -16682,7 +17126,7 @@ window.CAAC_QUESTIONS = [
       "液体的粘性与温度无关"
     ],
     "answer": 1,
-    "tip": "气体粘性随温度升高而增大。",
+    "tip": "温度升高会让气体分子运动更快、内摩擦增强，因此气体粘性通常增大，记“气体热了更黏”。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -16802,7 +17246,7 @@ window.CAAC_QUESTIONS = [
       "产生升力相等"
     ],
     "answer": 0,
-    "tip": "升力系数越大，产生的升力越大。",
+    "tip": "升力系数代表机翼在当前迎角和构型下的产升效率；Cl大通常升力大，但仍要乘上速度和密度因素。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -16862,8 +17306,8 @@ window.CAAC_QUESTIONS = [
       "升力、拉力、阻力"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "寄生阻力通常随速度增加而增大，诱导阻力在低速大迎角时更突出；先判断阻力类型。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -17202,8 +17646,8 @@ window.CAAC_QUESTIONS = [
       "都是"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "攻角看翼弦线与相对气流，姿态角看机身与基准线，航迹角看飞行轨迹与水平线；参考线不同，含义就不同。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -17302,8 +17746,8 @@ window.CAAC_QUESTIONS = [
       "飞机承受的载荷(除重力外)与重力的比值"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "升力来自相对气流改变，方向通常垂直于相对气流；机身抬头方向不一定就是升力方向。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -17382,9 +17826,22 @@ window.CAAC_QUESTIONS = [
       "飞机以大于临界迎角飞行"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
-    "specItems": null,
+    "tip": "物体平衡要求各方向合力为零且总力矩为零：垂直方向若升力不等于重力就会升降，水平方向若推力不等于阻力就会加减速，有净力矩则会转动。",
+    "memoryType": "spec-list",
+    "specItems": [
+      [
+        "垂直方向",
+        "升力/重力"
+      ],
+      [
+        "水平方向",
+        "推力/阻力"
+      ],
+      [
+        "转动状态",
+        "力矩平衡"
+      ]
+    ],
     "reviewStatus": "unreviewed",
     "reviewNote": "",
     "source": "题库_第09章.md",
@@ -17402,8 +17859,8 @@ window.CAAC_QUESTIONS = [
       "飞机升力系数最大时的迎角"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "增加迎角可提高升力，但也会增加阻力并接近失速；所以不是迎角越大越好，而是要匹配速度和载荷。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -18522,7 +18979,7 @@ window.CAAC_QUESTIONS = [
       "P=RρT"
     ],
     "answer": 2,
-    "tip": "理想气体关系：P=RρT。",
+    "tip": "理想气体状态关系把压力、密度、温度联系起来：P=RρT；改变一个量，其他量也要随之变化。",
     "memoryType": "formula",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -19862,7 +20319,7 @@ window.CAAC_QUESTIONS = [
       "升力等于重力，推力等于阻力，抬头力矩等于低头力矩"
     ],
     "answer": 2,
-    "tip": "平飞平衡：升力=重力、推力=阻力、力矩平衡。",
+    "tip": "平飞表示高度不变，匀速表示速度不变，姿态稳定表示不继续转动；因此三个方向都无加速度，得到升力=重力、推力=阻力、力矩平衡。",
     "memoryType": "spec-list",
     "specItems": [
       [
@@ -20715,7 +21172,7 @@ window.CAAC_QUESTIONS = [
       "滑跑阶段"
     ],
     "answer": 0,
-    "tip": "事故60%以上发生在起降阶段。",
+    "tip": "“超过60%”是事故统计结论，不是由原理算出的比例。起降时高度低、速度和姿态变化快、修正时间短，这些因素解释了事故为何集中在这一阶段。",
     "memoryType": "threshold",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -20735,7 +21192,7 @@ window.CAAC_QUESTIONS = [
       "任务飞行"
     ],
     "answer": 2,
-    "tip": "五边航线不含任务飞行。",
+    "tip": "五边航线服务于起飞和着陆的标准流程，任务飞行属于航线之外的作业段；记“起落归五边，任务在外面”。",
     "memoryType": "composition",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -21135,7 +21592,7 @@ window.CAAC_QUESTIONS = [
       "巡航阶段"
     ],
     "answer": 2,
-    "tip": "起降驾驶员不参与巡航阶段控制。",
+    "tip": "起降和巡航的操纵重点不同：起降需要精细控制高度速度，巡航需要保持航迹，所以按阶段分工。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -21195,8 +21652,8 @@ window.CAAC_QUESTIONS = [
       "三四转弯位置"
     ],
     "answer": 2,
-    "tip": "",
-    "memoryType": null,
+    "tip": "起飞异常时先保住姿态和安全高度，才有时间判断故障并执行预案；大幅操纵可能让可控问题变成失控。",
+    "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -21235,8 +21692,8 @@ window.CAAC_QUESTIONS = [
       "对飞机几乎没有影响"
     ],
     "answer": 0,
-    "tip": "",
-    "memoryType": null,
+    "tip": "着陆是连续变化过程，速度、高度和下滑趋势共同决定能否稳定接地，不能只凭一个瞬时读数。",
+    "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
     "reviewNote": "",
@@ -21555,7 +22012,7 @@ window.CAAC_QUESTIONS = [
       "平飘后段，速度较小，下沉较快，拉杆量应适当减小"
     ],
     "answer": 0,
-    "tip": "平飘前段速度较大、下沉较慢，拉杆量小。",
+    "tip": "平飘前段仍有较大速度、下沉较慢，过早拉杆会抬头过度并增加失速风险；所以前段轻拉。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -21715,7 +22172,7 @@ window.CAAC_QUESTIONS = [
       "如目测低，加油门量相应大些"
     ],
     "answer": 2,
-    "tip": "风速大或气温低，目测低时要相应多加油门。",
+    "tip": "风大或气温低会改变推力和下沉趋势，目测低时加油门是在补偿能量损失，不是盲目加速。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -22295,7 +22752,7 @@ window.CAAC_QUESTIONS = [
       "不必操纵，信任发动机自身性能"
     ],
     "answer": 0,
-    "tip": "长时间爬升发动机温度高：先定高，指标正常再继续。",
+    "tip": "长时间爬升时发动机持续输出导致温度积累；先定高让负荷下降，确认指标恢复后再继续。",
     "memoryType": "sequence",
     "specItems": null,
     "reviewStatus": "unreviewed",
@@ -22335,7 +22792,7 @@ window.CAAC_QUESTIONS = [
       "进行协调转弯，可有效减小转弯半径并增大侧滑"
     ],
     "answer": 0,
-    "tip": "坡度转弯配合方向舵，可减小转弯半径和侧滑。",
+    "tip": "坡度提供转弯的水平向力，方向舵协调机身和侧向运动；所以“压坡度、带方向”可减小侧滑。",
     "memoryType": "relationship",
     "specItems": null,
     "reviewStatus": "unreviewed",
