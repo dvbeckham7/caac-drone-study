@@ -14,12 +14,13 @@ function defaultCardState(){
 }
 
 function normalizeState(raw){
-  const next = { version: 1, currentIndex: 0, currentId: null, currentByChapter: {}, daily: null, cards: {}, answerStats: {} };
+  const next = { version: 1, currentIndex: 0, currentId: null, currentByChapter: {}, daily: null, cards: {}, answerStats: {}, selectedAnswers: {} };
   if (!raw || typeof raw !== 'object') return next;
   if (typeof raw.currentId === 'string') next.currentId = raw.currentId;
   if (raw.currentByChapter && typeof raw.currentByChapter === 'object') next.currentByChapter = { ...raw.currentByChapter };
   if (raw.daily && typeof raw.daily === 'object') next.daily = { ...raw.daily };
   if (raw.answerStats && typeof raw.answerStats === 'object') next.answerStats = { ...raw.answerStats };
+  if (raw.selectedAnswers && typeof raw.selectedAnswers === 'object') next.selectedAnswers = { ...raw.selectedAnswers };
   if (raw.cards && typeof raw.cards === 'object') {
     if (Number.isInteger(raw.currentIndex) && raw.currentIndex >= 0 && raw.currentIndex < questions.length) {
       next.currentIndex = raw.currentIndex;
@@ -42,7 +43,7 @@ function normalizeState(raw){
   return next;
 }
 
-let index=0,flipped=false,mode='study',wrongReview=false,retryQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
+let index=0,flipped=false,mode='study',wrongReview=false,replayMode=false,replayAnswered=false,retryQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
 let examQuestions = [], examAnswers = [], examIndex = 0, examEndsAt = 0, examTimerId = null, examSubmitted = false;
 function getFreshStartIndex(questionCount){
   return questionCount > 1 ? 1 + Math.floor(Math.random() * (questionCount - 1)) : 0;
@@ -292,7 +293,7 @@ function renderReviewNote(status, note){
 function render(){
   const q = questions[index];
   const card = getCardState(index);
-  const answered = !!card.result;
+  const answered = !!card.result && (!replayMode || replayAnswered);
   const chapterLabel = selectedChapter === 'all' ? '十章混合' : `第 ${selectedChapter} 章`;
 
   $('#chapterEyebrow').textContent = `CAAC 认证 · ${chapterLabel}`;
@@ -314,7 +315,10 @@ function render(){
   $('#flipTip').hidden = true;
 
   if (answered) {
-    const isCorrect = card.result === 'easy' || card.result === 'mid';
+    const selectedAnswer = state.selectedAnswers[q[3]];
+    const isCorrect = Number.isInteger(selectedAnswer)
+      ? selectedAnswer === q[2]
+      : card.result === 'easy' || card.result === 'mid';
     const memoryGuide = renderMemoryGuide(q[5], q[4]);
     const tipText = memoryGuide ? '' : `<span>${esc(q[4] || '')}</span>`;
     $('#feedback').className = 'feedback ' + (isCorrect ? 'good' : 'retry');
@@ -323,6 +327,7 @@ function render(){
       : `<b>这题先记住：${String.fromCharCode(65 + q[2])}. ${esc(q[1][q[2]])}</b><br>${tipText}${memoryGuide}${renderReviewNote(q[6], q[7])}`;
     document.querySelectorAll('.choice').forEach((b, i) => {
       if (i === q[2]) b.classList.add('correct');
+      if (Number.isInteger(selectedAnswer) && i === selectedAnswer && !isCorrect) b.classList.add('wrong');
       if (!isCorrect && i !== q[2]) b.classList.add('muted');
     });
   }
@@ -348,11 +353,14 @@ function render(){
 }
 
 function choose(i){
-  if (getCardState(index).result) return;
+  if (getCardState(index).result && !replayMode) return;
+  if (replayMode && replayAnswered) return;
   const correct = i === questions[index][2];
+  state.selectedAnswers[questions[index][3]] = i;
   recordAnswerStats(questions[index][3], correct);
   recordAnswer(index, correct ? 'easy' : 'hard');
   recordDailyAnswer();
+  if (replayMode) replayAnswered = true;
   if (!correct && !wrongReview && !retryQueue.some((item) => item.index === index)) {
     retryQueue.push({ index, remaining: 3 });
   }
@@ -360,6 +368,11 @@ function choose(i){
 }
 
 function next(){
+  if (replayMode) {
+    if (!replayAnswered) return;
+    replayMode = false;
+    replayAnswered = false;
+  }
   if (wrongReview) {
     const remainingWrong = questions.map((_, i) => i)
       .filter((i) => i !== index && getCardState(i).result === 'hard');
@@ -375,7 +388,11 @@ function next(){
   const retry = retryQueue.find((item) => item.remaining <= 0 && item.index !== index);
   if (retry) {
     retryQueue = retryQueue.filter((item) => item !== retry);
+    const card = getCardState(retry.index);
+    setCardState(retry.index, { status: 'new', result: null, due: 0, last: card.last });
     index = retry.index;
+    replayMode = true;
+    replayAnswered = false;
     save();
     render();
     return;
@@ -482,6 +499,8 @@ function retryCard(cardIndex){
   setCardState(cardIndex, { status: 'new', result: null, due: 0, last: card.last });
   index = cardIndex;
   wrongReview = true;
+  replayMode = true;
+  replayAnswered = false;
   save();
   showMode('study');
   render();
