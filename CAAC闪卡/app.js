@@ -43,18 +43,22 @@ function normalizeState(raw){
   return next;
 }
 
-let index=0,flipped=false,mode='study',wrongReview=false,replayMode=false,replayAnswered=false,retryQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
+let index=0,flipped=false,mode='study',wrongReview=false,currentAnswered=false,retryQueue=[],revealed=true,state=normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('caac-ch1') || '{}'));
 let examQuestions = [], examAnswers = [], examIndex = 0, examEndsAt = 0, examTimerId = null, examSubmitted = false;
 function getFreshStartIndex(questionCount){
   return questionCount > 1 ? 1 + Math.floor(Math.random() * (questionCount - 1)) : 0;
 }
 const savedChapterIndex = state.currentByChapter[selectedChapter];
-if (Number.isInteger(savedChapterIndex) && savedChapterIndex >= 0 && savedChapterIndex < questions.length) index = savedChapterIndex;
-if (!Number.isInteger(savedChapterIndex) && state.currentId) {
-  const savedIndex = questions.findIndex((question) => question[3] === state.currentId);
-  if (savedIndex >= 0) index = savedIndex;
+if (Number.isInteger(savedChapterIndex) && savedChapterIndex >= 0 && savedChapterIndex < questions.length) {
+  index = savedChapterIndex;
+} else {
+  const savedIndex = state.currentId ? questions.findIndex((question) => question[3] === state.currentId) : -1;
+  if (savedIndex >= 0) {
+    index = savedIndex;
+  } else if (questions.length > 1) {
+    index = getFreshStartIndex(questions.length);
+  }
 }
-if (!Number.isInteger(savedChapterIndex) && !state.currentId && questions.length > 1) index = getFreshStartIndex(questions.length);
 const $=s=>document.querySelector(s); const save=()=>{ state.currentIndex=index; state.currentId=questions[index]?.[3] || null; state.currentByChapter[selectedChapter]=index; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); };
 const esc=value=>String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
 
@@ -136,6 +140,7 @@ $('#chapterLevels').onclick = (event) => {
     ? state.currentByChapter[selectedChapter]
     : getFreshStartIndex(questions.length);
   wrongReview = false;
+  currentAnswered = false;
   retryQueue = [];
   localStorage.setItem('caac-selected-scope', String(selectedChapter));
   save();
@@ -293,7 +298,7 @@ function renderReviewNote(status, note){
 function render(){
   const q = questions[index];
   const card = getCardState(index);
-  const answered = !!card.result && (!replayMode || replayAnswered);
+  const answered = currentAnswered;
   const chapterLabel = selectedChapter === 'all' ? '十章混合' : `第 ${selectedChapter} 章`;
 
   $('#chapterEyebrow').textContent = `CAAC 认证 · ${chapterLabel}`;
@@ -353,14 +358,13 @@ function render(){
 }
 
 function choose(i){
-  if (getCardState(index).result && !replayMode) return;
-  if (replayMode && replayAnswered) return;
+  if (currentAnswered) return;
   const correct = i === questions[index][2];
   state.selectedAnswers[questions[index][3]] = i;
   recordAnswerStats(questions[index][3], correct);
   recordAnswer(index, correct ? 'easy' : 'hard');
   recordDailyAnswer();
-  if (replayMode) replayAnswered = true;
+  currentAnswered = true;
   if (!correct && !wrongReview && !retryQueue.some((item) => item.index === index)) {
     retryQueue.push({ index, remaining: 3 });
   }
@@ -368,11 +372,7 @@ function choose(i){
 }
 
 function next(){
-  if (replayMode) {
-    if (!replayAnswered) return;
-    replayMode = false;
-    replayAnswered = false;
-  }
+  currentAnswered = false;
   if (wrongReview) {
     const remainingWrong = questions.map((_, i) => i)
       .filter((i) => i !== index && getCardState(i).result === 'hard');
@@ -388,11 +388,7 @@ function next(){
   const retry = retryQueue.find((item) => item.remaining <= 0 && item.index !== index);
   if (retry) {
     retryQueue = retryQueue.filter((item) => item !== retry);
-    const card = getCardState(retry.index);
-    setCardState(retry.index, { status: 'new', result: null, due: 0, last: card.last });
     index = retry.index;
-    replayMode = true;
-    replayAnswered = false;
     save();
     render();
     return;
@@ -412,7 +408,12 @@ function showMode(m){
   $('#examView').hidden = m !== 'exam';
   if (m === 'all' || m === 'wrong') renderList();
   if (m === 'exam') {
-    if (!examQuestions.length || examSubmitted) startExam();
+    if (!examQuestions.length || examSubmitted) {
+      startExam();
+    } else if (!examTimerId) {
+      examTimerId = setInterval(updateExamTimer, 1000);
+      updateExamTimer();
+    }
     renderExam();
   }
 }
@@ -495,12 +496,9 @@ function renderList(){
 }
 
 function retryCard(cardIndex){
-  const card = getCardState(cardIndex);
-  setCardState(cardIndex, { status: 'new', result: null, due: 0, last: card.last });
   index = cardIndex;
   wrongReview = true;
-  replayMode = true;
-  replayAnswered = false;
+  currentAnswered = false;
   save();
   showMode('study');
   render();
@@ -508,7 +506,7 @@ function retryCard(cardIndex){
 
 $('#choiceList').onclick = (e) => {
   const b = e.target.closest('.choice');
-  if (!b || b.disabled || getCardState(index).result) return;
+  if (!b || b.disabled || currentAnswered) return;
   choose(Number(b.dataset.choice));
 };
 $('#wrongList').onclick = (e) => {
@@ -528,10 +526,17 @@ $('#examSubmit').onclick = submitExam;
 document.querySelectorAll('.tab').forEach((x) => x.onclick = () => showMode(x.dataset.mode));
 $('#resetBtn').onclick = () => {
   if (confirm('确定清空本章复习进度吗？')) {
-    state = { version: 1, currentIndex: 0, currentId: null, currentByChapter: {}, daily: null, cards: {}, answerStats: {} };
-    index = getFreshStartIndex(questions.length);
+    questions.forEach((question) => {
+      const id = question[3];
+      delete state.cards[id];
+      delete state.answerStats[id];
+      delete state.selectedAnswers[id];
+    });
+    delete state.currentByChapter[selectedChapter];
     wrongReview = false;
     retryQueue = [];
+    currentAnswered = false;
+    index = getFreshStartIndex(questions.length);
     save();
     renderChapterLevels();
     showMode('study');
@@ -539,9 +544,4 @@ $('#resetBtn').onclick = () => {
   }
 };
 
-if (!Number.isInteger(state.currentByChapter[selectedChapter])) {
-  index = state.currentId
-    ? index
-    : getFreshStartIndex(questions.length);
-}
 render();
